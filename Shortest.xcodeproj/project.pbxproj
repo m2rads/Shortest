@@ -19,7 +19,8 @@
 		DF7C94342BF93F8C00AC1F9B /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = DF7C94332BF93F8C00AC1F9B /* Supabase */; };
 		DF7C94372BF93FCB00AC1F9B /* Supabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94362BF93FCB00AC1F9B /* Supabase.swift */; };
 		DF7C943C2BF946E800AC1F9B /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C943B2BF946E800AC1F9B /* Auth.swift */; };
-		DF7C94402BF97D9800AC1F9B /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C943F2BF97D9800AC1F9B /* Profile.swift */; };
+		DF7C94402BF97D9800AC1F9B /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C943F2BF97D9800AC1F9B /* ProfileView.swift */; };
+		DF7C94432BF980BB00AC1F9B /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94422BF980BB00AC1F9B /* DataModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,7 +32,8 @@
 		DF7C94362BF93FCB00AC1F9B /* Supabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supabase.swift; sourceTree = "<group>"; };
 		DF7C943B2BF946E800AC1F9B /* Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
 		DF7C943D2BF965FC00AC1F9B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		DF7C943F2BF97D9800AC1F9B /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		DF7C943F2BF97D9800AC1F9B /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		DF7C94422BF980BB00AC1F9B /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 		DF7229792BF82C66001EAD77 /* Shortest */ = {
 			isa = PBXGroup;
 			children = (
+				DF7C94412BF980A800AC1F9B /* Models */,
 				DF7C943D2BF965FC00AC1F9B /* Info.plist */,
 				DF7C943E2BF97D8800AC1F9B /* AccountView */,
 				DF7C943A2BF946D800AC1F9B /* LoginView */,
@@ -109,9 +112,17 @@
 		DF7C943E2BF97D8800AC1F9B /* AccountView */ = {
 			isa = PBXGroup;
 			children = (
-				DF7C943F2BF97D9800AC1F9B /* Profile.swift */,
+				DF7C943F2BF97D9800AC1F9B /* ProfileView.swift */,
 			);
 			path = AccountView;
+			sourceTree = "<group>";
+		};
+		DF7C94412BF980A800AC1F9B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DF7C94422BF980BB00AC1F9B /* DataModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -196,10 +207,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				DF72297D2BF82C66001EAD77 /* ContentView.swift in Sources */,
-				DF7C94402BF97D9800AC1F9B /* Profile.swift in Sources */,
+				DF7C94402BF97D9800AC1F9B /* ProfileView.swift in Sources */,
 				DF7C94372BF93FCB00AC1F9B /* Supabase.swift in Sources */,
 				DF72297B2BF82C66001EAD77 /* ShortestApp.swift in Sources */,
 				DF7C943C2BF946E800AC1F9B /* Auth.swift in Sources */,
+				DF7C94432BF980BB00AC1F9B /* DataModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

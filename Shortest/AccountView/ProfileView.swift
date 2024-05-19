@@ -8,7 +8,7 @@
 import SwiftUI
 import Supabase
 
-struct Profile: View {
+struct ProfileView: View {
     @State var username = ""
     @State var fullname = ""
     @State var website = ""
@@ -29,9 +29,13 @@ struct Profile: View {
         
         Section {
             Button("Update profile") {
-                updateProfileButtonTapped() // TODO: implement
+                updateProfileButtonTapped()
             }
+            .bold()
             
+            if isLoading {
+                ProgressView()
+            }
         }
     }
     
@@ -42,7 +46,7 @@ struct Profile: View {
             do {
                 let currentUser = try await supabase.auth.session.user
                 
-                try await supabase.database
+                try await supabase
                     .from("profiles")
                     .update(
                         UpdateProfileParams(
@@ -61,5 +65,5 @@ struct Profile: View {
 }
 
 #Preview {
-    Profile()
+    ProfileView()
 }
