@@ -8,7 +8,7 @@
 import SwiftUI
 import Supabase
 
-struct AuthView: View {
+struct Auth: View {
     @State var email = ""
     @State var isLoading = false
     @State var result: Result<Void, Error>?
@@ -75,5 +75,5 @@ struct AuthView: View {
 }
 
 #Preview {
-    AuthView()
+    Auth()
 }
