@@ -29,6 +29,7 @@
 		DF7229812BF82C68001EAD77 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		DF7C94362BF93FCB00AC1F9B /* Supabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supabase.swift; sourceTree = "<group>"; };
 		DF7C943B2BF946E800AC1F9B /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		DF7C943D2BF965FC00AC1F9B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +68,7 @@
 		DF7229792BF82C66001EAD77 /* Shortest */ = {
 			isa = PBXGroup;
 			children = (
+				DF7C943D2BF965FC00AC1F9B /* Info.plist */,
 				DF7C943A2BF946D800AC1F9B /* LoginView */,
 				DF7C94352BF93FBC00AC1F9B /* Helper */,
 				DF72297A2BF82C66001EAD77 /* ShortestApp.swift */,
@@ -322,6 +324,7 @@
 				DEVELOPMENT_TEAM = SXGK4ZATLS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Shortest/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -351,6 +354,7 @@
 				DEVELOPMENT_TEAM = SXGK4ZATLS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Shortest/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

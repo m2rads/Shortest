@@ -25,8 +25,34 @@ struct AuthView: View {
                 Button("Sign in") {
                     signInButtonTapped()
                 }
+                .foregroundColor(.black)
+                
+                if isLoading {
+                    ProgressView()
+                }
+            }
+            // optional binding in swift / we check if the result var has value
+            if let result {
+                Section {
+                    switch result {
+                    case .success:
+                        Text("Check your inbox")
+                    case .failure(let error):
+                        Text(error.localizedDescription).foregroundStyle(.red)
+                    }
+                }
             }
         }
+        // event handling when the user click on the email in their app : deep linking auth
+        .onOpenURL(perform: { url in
+            Task {
+                do {
+                    try await supabase.auth.session(from: url)
+                } catch {
+                    self.result = .failure(error)
+                }
+            }
+        })
     }
     
     func signInButtonTapped() {
@@ -38,8 +64,11 @@ struct AuthView: View {
             do {
                 try await supabase.auth.signInWithOTP(
                     email: email,
-                    redirectTo: URL(string: "io.supabase.user-management://login-callback")
+                    redirectTo: URL(string: "com.shortest://login-callback")
                 )
+                result = .success(())
+            } catch {
+                result = .failure(error)
             }
         }
     }
