@@ -71,7 +71,7 @@ struct ProfileView: View {
             self.username = profile.username ?? ""
             self.fullName = profile.fullName ?? ""
             self.website = profile.website ?? ""
-            
+                        
         } catch {
             debugPrint(error)
         }
