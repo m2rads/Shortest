@@ -22,6 +22,8 @@
 		DF7C94452BFAD33300AC1F9B /* MagicLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94442BFAD33300AC1F9B /* MagicLinkView.swift */; };
 		DF7C94472BFAD35600AC1F9B /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94462BFAD35600AC1F9B /* ProfileView.swift */; };
 		DF7C94492BFB3A4E00AC1F9B /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94482BFB3A4E00AC1F9B /* SignInView.swift */; };
+		DF7C944C2BFBD84400AC1F9B /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C944B2BFBD84400AC1F9B /* AuthManager.swift */; };
+		DF7C944E2BFBDA0B00AC1F9B /* AppleSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C944D2BFBDA0B00AC1F9B /* AppleSignIn.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		DF7C94442BFAD33300AC1F9B /* MagicLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicLinkView.swift; sourceTree = "<group>"; };
 		DF7C94462BFAD35600AC1F9B /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		DF7C94482BFB3A4E00AC1F9B /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		DF7C944B2BFBD84400AC1F9B /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		DF7C944D2BFBDA0B00AC1F9B /* AppleSignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignIn.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +101,8 @@
 			isa = PBXGroup;
 			children = (
 				DF7C94362BF93FCB00AC1F9B /* Supabase.swift */,
+				DF7C944B2BFBD84400AC1F9B /* AuthManager.swift */,
+				DF7C944D2BFBDA0B00AC1F9B /* AppleSignIn.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -218,10 +224,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				DF72297D2BF82C66001EAD77 /* ContentView.swift in Sources */,
+				DF7C944C2BFBD84400AC1F9B /* AuthManager.swift in Sources */,
 				DF7C94492BFB3A4E00AC1F9B /* SignInView.swift in Sources */,
 				DF7C94372BF93FCB00AC1F9B /* Supabase.swift in Sources */,
 				DF72297B2BF82C66001EAD77 /* ShortestApp.swift in Sources */,
 				DF7C94432BF980BB00AC1F9B /* DataModel.swift in Sources */,
+				DF7C944E2BFBDA0B00AC1F9B /* AppleSignIn.swift in Sources */,
 				DF7C94472BFAD35600AC1F9B /* ProfileView.swift in Sources */,
 				DF7C94452BFAD33300AC1F9B /* MagicLinkView.swift in Sources */,
 			);
