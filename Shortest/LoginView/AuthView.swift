@@ -45,29 +45,38 @@ struct Auth: View {
         }
         // event handling when the user click on the email in their app : deep linking auth
         .onOpenURL(perform: { url in
-            Task {
-                do {
-                    try await supabase.auth.session(from: url)
-                } catch {
-                    self.result = .failure(error)
-                }
-            }
+            handleOpenURL(url)
         })
     }
     
+    func handleOpenURL(_ url: URL) {
+        print("Received URL: \(url)")
+        Task {
+            do {
+                try await supabase.auth.session(from: url)
+                result = .success(())
+                print("Authentication successful")
+            } catch {
+                print("Error handling URL: \(error)")
+                result = .failure(error)
+            }
+        }
+    }
+
+    
     func signInButtonTapped() {
-        // async code in a new task: here probably making a http request to supabase
         Task {
             isLoading = true
             defer { isLoading = false }
-            
             do {
                 try await supabase.auth.signInWithOTP(
                     email: email,
-                    redirectTo: URL(string: "com.mohammadrad.shortest://login-callback")
+                    redirectTo: URL(string: "com.shortest://login-callback")
                 )
                 result = .success(())
+                print("Sign-in initiated, check your email for the magic link")
             } catch {
+                print("Error initiating sign-in: \(error)")
                 result = .failure(error)
             }
         }
