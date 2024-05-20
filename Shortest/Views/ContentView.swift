@@ -15,7 +15,7 @@ struct ContentView: View {
           if isAuthenticated {
             ProfileView()
           } else {
-            Auth()
+              MagicLinkView()
           }
         }
         .task {

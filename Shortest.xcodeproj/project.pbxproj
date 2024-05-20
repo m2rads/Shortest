@@ -19,8 +19,9 @@
 		DF7C94342BF93F8C00AC1F9B /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = DF7C94332BF93F8C00AC1F9B /* Supabase */; };
 		DF7C94372BF93FCB00AC1F9B /* Supabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94362BF93FCB00AC1F9B /* Supabase.swift */; };
 		DF7C94432BF980BB00AC1F9B /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94422BF980BB00AC1F9B /* DataModel.swift */; };
-		DF7C94452BFAD33300AC1F9B /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94442BFAD33300AC1F9B /* Auth.swift */; };
+		DF7C94452BFAD33300AC1F9B /* MagicLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94442BFAD33300AC1F9B /* MagicLinkView.swift */; };
 		DF7C94472BFAD35600AC1F9B /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94462BFAD35600AC1F9B /* ProfileView.swift */; };
+		DF7C94492BFB3A4E00AC1F9B /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94482BFB3A4E00AC1F9B /* SignInView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,8 +33,9 @@
 		DF7C94362BF93FCB00AC1F9B /* Supabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supabase.swift; sourceTree = "<group>"; };
 		DF7C943D2BF965FC00AC1F9B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DF7C94422BF980BB00AC1F9B /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
-		DF7C94442BFAD33300AC1F9B /* Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
+		DF7C94442BFAD33300AC1F9B /* MagicLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicLinkView.swift; sourceTree = "<group>"; };
 		DF7C94462BFAD35600AC1F9B /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		DF7C94482BFB3A4E00AC1F9B /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,13 +74,11 @@
 		DF7229792BF82C66001EAD77 /* Shortest */ = {
 			isa = PBXGroup;
 			children = (
+				DF7C944A2BFBD7FD00AC1F9B /* Views */,
 				DF7C94412BF980A800AC1F9B /* Models */,
-				DF7C943D2BF965FC00AC1F9B /* Info.plist */,
-				DF7C943E2BF97D8800AC1F9B /* AccountView */,
-				DF7C943A2BF946D800AC1F9B /* LoginView */,
 				DF7C94352BF93FBC00AC1F9B /* Helper */,
 				DF72297A2BF82C66001EAD77 /* ShortestApp.swift */,
-				DF72297C2BF82C66001EAD77 /* ContentView.swift */,
+				DF7C943D2BF965FC00AC1F9B /* Info.plist */,
 				DF72297E2BF82C68001EAD77 /* Assets.xcassets */,
 				DF7229802BF82C68001EAD77 /* Preview Content */,
 			);
@@ -101,12 +101,13 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
-		DF7C943A2BF946D800AC1F9B /* LoginView */ = {
+		DF7C943A2BF946D800AC1F9B /* AuthView */ = {
 			isa = PBXGroup;
 			children = (
-				DF7C94442BFAD33300AC1F9B /* Auth.swift */,
+				DF7C94442BFAD33300AC1F9B /* MagicLinkView.swift */,
+				DF7C94482BFB3A4E00AC1F9B /* SignInView.swift */,
 			);
-			path = LoginView;
+			path = AuthView;
 			sourceTree = "<group>";
 		};
 		DF7C943E2BF97D8800AC1F9B /* AccountView */ = {
@@ -123,6 +124,16 @@
 				DF7C94422BF980BB00AC1F9B /* DataModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		DF7C944A2BFBD7FD00AC1F9B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DF72297C2BF82C66001EAD77 /* ContentView.swift */,
+				DF7C943E2BF97D8800AC1F9B /* AccountView */,
+				DF7C943A2BF946D800AC1F9B /* AuthView */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,11 +218,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				DF72297D2BF82C66001EAD77 /* ContentView.swift in Sources */,
+				DF7C94492BFB3A4E00AC1F9B /* SignInView.swift in Sources */,
 				DF7C94372BF93FCB00AC1F9B /* Supabase.swift in Sources */,
 				DF72297B2BF82C66001EAD77 /* ShortestApp.swift in Sources */,
 				DF7C94432BF980BB00AC1F9B /* DataModel.swift in Sources */,
 				DF7C94472BFAD35600AC1F9B /* ProfileView.swift in Sources */,
-				DF7C94452BFAD33300AC1F9B /* Auth.swift in Sources */,
+				DF7C94452BFAD33300AC1F9B /* MagicLinkView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

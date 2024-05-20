@@ -8,7 +8,7 @@
 import SwiftUI
 import Supabase
 
-struct Auth: View {
+struct MagicLinkView: View {
     @State var email = ""
     @State var isLoading = false
     @State var result: Result<Void, Error>?
@@ -56,7 +56,6 @@ struct Auth: View {
     }
     
     func signInButtonTapped() {
-        // async code in a new task: here probably making a http request to supabase
         Task {
             isLoading = true
             defer { isLoading = false }
@@ -64,7 +63,7 @@ struct Auth: View {
             do {
                 try await supabase.auth.signInWithOTP(
                     email: email,
-                    redirectTo: URL(string: "com.mohammadrad.shortest://login-callback")
+                    redirectTo: URL(string: "app.shortest://")
                 )
                 result = .success(())
             } catch {
@@ -75,5 +74,5 @@ struct Auth: View {
 }
 
 #Preview {
-    Auth()
+    MagicLinkView()
 }
