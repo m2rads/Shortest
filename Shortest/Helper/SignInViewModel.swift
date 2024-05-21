@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class SignInViewModel: ObservableObject {
     let appleSignIn = AppleSignIn()
     

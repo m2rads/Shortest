@@ -17,7 +17,13 @@ struct ChatView: View {
             Text(appUser.email ?? "no email")
             
             Button {
-                
+                Task {
+                    do {
+                        try await AuthManager.shared.signOut()
+                    } catch {
+                        print("unable to sign out at this time")
+                    }
+                }
             } label: {
                 Text("Sign out")
                     .foregroundStyle(.red)

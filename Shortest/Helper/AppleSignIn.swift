@@ -14,6 +14,7 @@ struct AppleSignInResult {
     let nonce: String
 }
 
+@MainActor
 class AppleSignIn: NSObject {
     
     fileprivate var currentNonce: String?
