@@ -9,32 +9,41 @@ import SwiftUI
 
 struct SignInView: View {
     @StateObject var viewModel = SignInViewModel()
+    @State private var email = ""
+    @State private var password = ""
     
     @Binding var appUser: AppUser?
     
     var body: some View {
-        VStack {
-            Button {
-                Task {
-                    do {
-                        let appUser = try await viewModel.SignInWithApple()
-                        self.appUser = appUser
-                    } catch {
-                        print("error sign in with apple")
-                    }
-                }
-            } label: {
-                Text("Sign in with Apple")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .foregroundColor(.primary)
-                    .background(Color(UIColor.systemBackground))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 15)
-                            .stroke(Color.primary, lineWidth: 1)
-                    }
+        VStack(spacing: 40) {
+            VStack {
+                EmailField(placeHolder: "Email", text: $email)
+                PasswordField(placeHolder: "Password", text: $password)
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal)
+            VStack {
+                Button {
+                    Task {
+                        do {
+                            let appUser = try await viewModel.SignInWithApple()
+                            self.appUser = appUser
+                        } catch {
+                            print("error sign in with apple")
+                        }
+                    }
+                } label: {
+                    Text("Sign in with Apple")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .foregroundColor(.primary)
+                        .background(Color(UIColor.systemBackground))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 15)
+                                .stroke(Color.primary, lineWidth: 1)
+                        }
+                }
+            }
+            .padding(.horizontal)
         }
         .background(Color(UIColor.systemBackground).edgesIgnoringSafeArea(.all))
     }
