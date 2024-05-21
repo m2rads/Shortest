@@ -15,27 +15,30 @@ struct SignInView: View {
     @Binding var appUser: AppUser?
     
     var body: some View {
-        VStack(spacing: 30) {
+        VStack {
+            // Logo
+            Spacer()
+            Text("Shortest.")
+                .font(.system(size: 50, weight: .bold))
+                .foregroundColor(Color.primary)
+            
+            Spacer()
+            
             VStack {
-                EmailField(placeHolder: "Email", text: $email)
-                PasswordField(placeHolder: "Password", text: $password)
                 Button {
                     print("Sign In")
                 } label: {
                     Text("Sign In With Email")
-                        .padding()
-                        .foregroundColor(Color(uiColor: .systemBackground))
                         .frame(maxWidth: .infinity)
-                        .background {
-                            RoundedRectangle(cornerRadius: 15, style: .continuous)
-                                .foregroundColor(Color(uiColor: .label))
+                        .padding()
+                        .foregroundColor(.primary)
+                        .background(Color(UIColor.systemBackground))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 15)
+                                .stroke(Color.primary, lineWidth: 1)
                         }
                 }
-
-            }
-            .padding(.horizontal, 24) 
-                        
-            VStack {
+                
                 Button {
                     Task {
                         do {
@@ -47,17 +50,17 @@ struct SignInView: View {
                     }
                 } label: {
                     Text("Sign in with Apple")
-                        .frame(maxWidth: .infinity)
                         .padding()
-                        .foregroundColor(.primary)
-                        .background(Color(UIColor.systemBackground))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 15)
-                                .stroke(Color.primary, lineWidth: 1)
+                        .foregroundColor(Color(uiColor: .systemBackground))
+                        .frame(maxWidth: .infinity)
+                        .background {
+                            RoundedRectangle(cornerRadius: 15, style: .continuous)
+                                .foregroundColor(Color(uiColor: .label))
                         }
                 }
             }
             .padding(.horizontal, 24)
+            .padding(.bottom, 60)
         }
         .background(Color(UIColor.systemBackground).edgesIgnoringSafeArea(.all))
     }
