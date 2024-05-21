@@ -25,9 +25,18 @@ struct SignInView: View {
                 }
             } label: {
                 Text("Sign in with Apple")
-                    .foregroundStyle(.black)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .foregroundColor(.primary)
+                    .background(Color(UIColor.systemBackground))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(Color.primary, lineWidth: 1)
+                    }
+            }
+            .padding(.horizontal, 24)
         }
-        }
+        .background(Color(UIColor.systemBackground).edgesIgnoringSafeArea(.all))
     }
 }
 
