@@ -9,15 +9,25 @@ import SwiftUI
 
 class SignInViewModel: ObservableObject {
     
-    func SignInWithApple(){} 
+    func SignInWithApple(){}
 }
 
 struct SignInView: View {
     @StateObject var viewModel = SignInViewModel()
+    let appleSignIn = AppleSignIn()
     
     var body: some View {
         Button {
-            print("apple")
+            appleSignIn.startSignInWithAppleFlow { result in
+                switch result {
+                    case .success(let appleSignInResult):
+                        Task {
+                            try await AuthManager.shared.signInWithApple(idToken: appleSignInResult.idToken, nonce: appleSignInResult.nonce)
+                        }
+                case .failure(let failure):
+                    print("error \(failure)")
+                }
+            }
         } label: {
             Text("Sign in with Apple")
                 .foregroundStyle(.black)

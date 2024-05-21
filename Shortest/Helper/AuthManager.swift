@@ -15,7 +15,9 @@ class AuthManager {
     private init() {}
     
     func signInWithApple(idToken: String, nonce: String) async throws {
-        let sessison = try await supabase.auth.signInWithIdToken(credentials: .init(provider: .apple, idToken: idToken, nonce: nonce))
+        let session = try await supabase.auth.signInWithIdToken(credentials: .init(provider: .apple, idToken: idToken, nonce: nonce))
+        print(session)
+        print(session.user)
     }
     
 }
