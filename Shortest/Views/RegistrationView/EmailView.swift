@@ -11,18 +11,43 @@ struct EmailView: View {
     @Binding var email: String
     var nextStep: () -> Void
     
+    @State private var showError = false
+    
     var body: some View {
         VStack {
             TextField("Enter your email", text: $email)
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .autocapitalization(.none)
+                .keyboardType(.emailAddress)
             
-            Button(action: nextStep) {
+            if showError {
+                Text("Please enter a valid email address")
+                    .foregroundColor(.red)
+            }
+            
+            Button(action: validateAndProceed) {
                 Text("Next")
                     .padding()
             }
         }
         .padding()
+    }
+    
+    func validateAndProceed() {
+        if isValidEmail(email) {
+            showError = false
+            nextStep()
+        } else {
+            showError = true
+        }
+    }
+    
+    func isValidEmail(_ email: String) -> Bool {
+        // Simple email validation regex pattern
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailPredicate.evaluate(with: email)
     }
 }
 
