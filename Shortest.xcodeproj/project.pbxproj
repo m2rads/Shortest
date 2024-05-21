@@ -64,6 +64,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DF50A7562BFC71C4008D638B /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				DF7C944B2BFBD84400AC1F9B /* AuthManager.swift */,
+				DF7C944D2BFBDA0B00AC1F9B /* AppleSignIn.swift */,
+				DF50A7542BFC5F4A008D638B /* SignInViewModel.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
 		DF72296E2BF82C66001EAD77 = {
 			isa = PBXGroup;
 			children = (
@@ -87,6 +97,7 @@
 				DF7C944A2BFBD7FD00AC1F9B /* Views */,
 				DF7C94412BF980A800AC1F9B /* Models */,
 				DF7C94352BF93FBC00AC1F9B /* Helper */,
+				DF50A7562BFC71C4008D638B /* Auth */,
 				DF72297A2BF82C66001EAD77 /* ShortestApp.swift */,
 				DF7C943D2BF965FC00AC1F9B /* Info.plist */,
 				DF72297E2BF82C68001EAD77 /* Assets.xcassets */,
@@ -107,9 +118,6 @@
 			isa = PBXGroup;
 			children = (
 				DF7C94362BF93FCB00AC1F9B /* Supabase.swift */,
-				DF7C944B2BFBD84400AC1F9B /* AuthManager.swift */,
-				DF7C944D2BFBDA0B00AC1F9B /* AppleSignIn.swift */,
-				DF50A7542BFC5F4A008D638B /* SignInViewModel.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
