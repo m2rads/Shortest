@@ -15,12 +15,26 @@ struct SignInView: View {
     @Binding var appUser: AppUser?
     
     var body: some View {
-        VStack(spacing: 40) {
+        VStack(spacing: 30) {
             VStack {
                 EmailField(placeHolder: "Email", text: $email)
                 PasswordField(placeHolder: "Password", text: $password)
+                Button {
+                    print("Sign In")
+                } label: {
+                    Text("Sign In With Email")
+                        .padding()
+                        .foregroundColor(Color(uiColor: .systemBackground))
+                        .frame(maxWidth: .infinity)
+                        .background {
+                            RoundedRectangle(cornerRadius: 15, style: .continuous)
+                                .foregroundColor(Color(uiColor: .label))
+                        }
+                }
+
             }
-            .padding(.horizontal)
+            .padding(.horizontal, 24)
+                        
             VStack {
                 Button {
                     Task {
@@ -43,7 +57,7 @@ struct SignInView: View {
                         }
                 }
             }
-            .padding(.horizontal)
+            .padding(.horizontal, 24)
         }
         .background(Color(UIColor.systemBackground).edgesIgnoringSafeArea(.all))
     }
