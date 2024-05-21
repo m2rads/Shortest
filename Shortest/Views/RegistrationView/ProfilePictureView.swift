@@ -8,11 +8,31 @@
 import SwiftUI
 
 struct ProfilePictureView: View {
+    @Binding var profilePicture: UIImage
+    var previousStep: () -> Void
+    var finishRegistration: () -> Void
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            // Placeholder for profile picture selection
+            Text("Profile Picture View")
+            
+            HStack {
+                Button(action: previousStep) {
+                    Text("Back")
+                        .padding()
+                }
+                
+                Button(action: finishRegistration) {
+                    Text("Finish")
+                        .padding()
+                }
+            }
+        }
+        .padding()
     }
 }
 
 #Preview {
-    ProfilePictureView()
+    ProfilePictureView(profilePicture: .constant(UIImage()), previousStep: {}, finishRegistration: {})
 }

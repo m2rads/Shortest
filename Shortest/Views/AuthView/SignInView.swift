@@ -33,13 +33,13 @@ struct SignInView: View {
                 }
 
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, 24) 
                         
             VStack {
                 Button {
                     Task {
                         do {
-                            let appUser = try await viewModel.SignInWithApple()
+                            let appUser = try await viewModel.signInWithApple()
                             self.appUser = appUser
                         } catch {
                             print("error sign in with apple")

@@ -8,11 +8,34 @@
 import SwiftUI
 
 struct UsernameView: View {
+    @Binding var username: String
+    var nextStep: () -> Void
+    var previousStep: () -> Void
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            TextField("Enter your username", text: $username)
+                .padding()
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+            
+            HStack {
+                Button(action: previousStep) {
+                    Text("Back")
+                        .padding()                        
+                }
+                
+                Button(action: nextStep) {
+                    Text("Next")
+                        .padding()
+                        
+                }
+            }
+        }
+        .padding()
     }
 }
 
+
 #Preview {
-    UsernameView()
+    UsernameView(username: .constant(""), nextStep: {}, previousStep: {})
 }

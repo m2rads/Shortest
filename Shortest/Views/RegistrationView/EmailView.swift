@@ -8,11 +8,24 @@
 import SwiftUI
 
 struct EmailView: View {
+    @Binding var email: String
+    var nextStep: () -> Void
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            TextField("Enter your email", text: $email)
+                .padding()
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+            
+            Button(action: nextStep) {
+                Text("Next")
+                    .padding()
+            }
+        }
+        .padding()
     }
 }
 
 #Preview {
-    EmailView()
+    EmailView(email: .constant(""), nextStep: {})
 }
