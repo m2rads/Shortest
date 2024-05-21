@@ -13,7 +13,7 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             if let appUser = appUser { 
-                ChatView(appUser: appUser)
+                ChatView(appUser: $appUser)
             } else {
                 SignInView(appUser: $appUser)
             }

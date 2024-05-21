@@ -8,30 +8,33 @@
 import SwiftUI
 
 struct ChatView: View {
-    @State var appUser: AppUser
+    @Binding var appUser: AppUser?
     
     var body: some View {
-        VStack {
-            Text(appUser.uid)
-            
-            Text(appUser.email ?? "no email")
-            
-            Button {
-                Task {
-                    do {
-                        try await AuthManager.shared.signOut()
-                    } catch {
-                        print("unable to sign out at this time")
+        if let appUser = appUser {
+            VStack {
+                Text(appUser.uid)
+                
+                Text(appUser.email ?? "no email")
+                
+                Button {
+                    Task {
+                        do {
+                            try await AuthManager.shared.signOut()
+                            self.appUser = nil
+                        } catch {
+                            print("unable to sign out at this time")
+                        }
                     }
+                } label: {
+                    Text("Sign out")
+                        .foregroundStyle(.red)
                 }
-            } label: {
-                Text("Sign out")
-                    .foregroundStyle(.red)
             }
         }
     }
 }
 
 #Preview {
-    ChatView(appUser: .init(uid: "12345", email: "hello@example.com"))
+    ChatView(appUser: .constant(.init(uid: "12345", email: "hello@example.com")))
 }
