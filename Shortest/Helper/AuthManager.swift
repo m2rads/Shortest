@@ -7,6 +7,10 @@
 
 import Foundation
 
+struct AppUser {
+    let uid: String
+    let email: String?
+}
 
 class AuthManager {
     
@@ -14,10 +18,14 @@ class AuthManager {
     
     private init() {}
     
-    func signInWithApple(idToken: String, nonce: String) async throws {
+    func getCurrentSession() async throws -> AppUser {
+        let session = try await supabase.auth.session
+        return AppUser(uid: session.user.id.uuidString, email: session.user.email)
+    }
+    
+    func signInWithApple(idToken: String, nonce: String) async throws -> AppUser {
         let session = try await supabase.auth.signInWithIdToken(credentials: .init(provider: .apple, idToken: idToken, nonce: nonce))
-        print(session)
-        print(session.user)
+        return AppUser(uid: session.user.id.uuidString, email: session.user.email)
     }
     
 }

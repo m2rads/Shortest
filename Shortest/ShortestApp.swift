@@ -11,7 +11,7 @@ import SwiftUI
 struct ShortestApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(appUser: nil)
         }
     }
 }

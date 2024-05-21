@@ -19,7 +19,17 @@ class AppleSignIn: NSObject {
     fileprivate var currentNonce: String?
     private var completionHandler: ((Result<AppleSignInResult, Error>) -> Void)?
     
-    func startSignInWithAppleFlow(completion: @escaping (Result<AppleSignInResult, Error>) -> Void) {
+    func startSignInWithAppleFlow() async throws -> AppleSignInResult {
+        try await withCheckedThrowingContinuation({ [weak self] continuation in
+            self?.startSignInWithAppleFlow { result in
+                continuation.resume(with: result)
+                return
+            }
+            
+        })
+    }
+    
+    private func startSignInWithAppleFlow(completion: @escaping (Result<AppleSignInResult, Error>) -> Void) {
         guard let topVC = UIApplication.getTopViewController() else {
             // TODO: specify the type of error
             completion(.failure(NSError()))

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DF50A7532BFC45F6008D638B /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7522BFC45F6008D638B /* ChatView.swift */; };
+		DF50A7552BFC5F4A008D638B /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7542BFC5F4A008D638B /* SignInViewModel.swift */; };
 		DF72297B2BF82C66001EAD77 /* ShortestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF72297A2BF82C66001EAD77 /* ShortestApp.swift */; };
 		DF72297D2BF82C66001EAD77 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF72297C2BF82C66001EAD77 /* ContentView.swift */; };
 		DF72297F2BF82C68001EAD77 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DF72297E2BF82C68001EAD77 /* Assets.xcassets */; };
@@ -27,6 +29,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DF50A7522BFC45F6008D638B /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		DF50A7542BFC5F4A008D638B /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		DF7229772BF82C66001EAD77 /* Shortest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shortest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF72297A2BF82C66001EAD77 /* ShortestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortestApp.swift; sourceTree = "<group>"; };
 		DF72297C2BF82C66001EAD77 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -105,6 +109,7 @@
 				DF7C94362BF93FCB00AC1F9B /* Supabase.swift */,
 				DF7C944B2BFBD84400AC1F9B /* AuthManager.swift */,
 				DF7C944D2BFBDA0B00AC1F9B /* AppleSignIn.swift */,
+				DF50A7542BFC5F4A008D638B /* SignInViewModel.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -122,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				DF7C94462BFAD35600AC1F9B /* ProfileView.swift */,
+				DF50A7522BFC45F6008D638B /* ChatView.swift */,
 			);
 			path = AccountView;
 			sourceTree = "<group>";
@@ -227,11 +233,13 @@
 			files = (
 				DF72297D2BF82C66001EAD77 /* ContentView.swift in Sources */,
 				DF7C944C2BFBD84400AC1F9B /* AuthManager.swift in Sources */,
+				DF50A7532BFC45F6008D638B /* ChatView.swift in Sources */,
 				DF7C94492BFB3A4E00AC1F9B /* SignInView.swift in Sources */,
 				DF7C94372BF93FCB00AC1F9B /* Supabase.swift in Sources */,
 				DF72297B2BF82C66001EAD77 /* ShortestApp.swift in Sources */,
 				DF7C94432BF980BB00AC1F9B /* DataModel.swift in Sources */,
 				DF7C944E2BFBDA0B00AC1F9B /* AppleSignIn.swift in Sources */,
+				DF50A7552BFC5F4A008D638B /* SignInViewModel.swift in Sources */,
 				DF7C94472BFAD35600AC1F9B /* ProfileView.swift in Sources */,
 				DF7C94452BFAD33300AC1F9B /* MagicLinkView.swift in Sources */,
 			);

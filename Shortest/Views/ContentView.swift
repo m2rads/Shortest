@@ -8,13 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var isAuthenticated = false
+    @State var appUser: AppUser?
 
     var body: some View {
-        SignInView()
+        ZStack {
+            if let appUser = appUser { 
+                ChatView(appUser: appUser)
+            } else {
+                SignInView(appUser: $appUser)
+            }
+        }
+            .onAppear {
+                Task {
+                    try await AuthManager.shared.getCurrentSession()
+                }
+            }
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView(appUser: nil)
 }
