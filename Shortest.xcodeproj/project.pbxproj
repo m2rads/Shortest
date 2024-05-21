@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		DF50A7532BFC45F6008D638B /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7522BFC45F6008D638B /* ChatView.swift */; };
 		DF50A7552BFC5F4A008D638B /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7542BFC5F4A008D638B /* SignInViewModel.swift */; };
+		DF50A7582BFC7A89008D638B /* EmailField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7572BFC7A89008D638B /* EmailField.swift */; };
+		DF50A75A2BFC7D43008D638B /* PasswordField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7592BFC7D43008D638B /* PasswordField.swift */; };
 		DF72297B2BF82C66001EAD77 /* ShortestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF72297A2BF82C66001EAD77 /* ShortestApp.swift */; };
 		DF72297D2BF82C66001EAD77 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF72297C2BF82C66001EAD77 /* ContentView.swift */; };
 		DF72297F2BF82C68001EAD77 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DF72297E2BF82C68001EAD77 /* Assets.xcassets */; };
@@ -31,6 +33,8 @@
 /* Begin PBXFileReference section */
 		DF50A7522BFC45F6008D638B /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		DF50A7542BFC5F4A008D638B /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
+		DF50A7572BFC7A89008D638B /* EmailField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailField.swift; sourceTree = "<group>"; };
+		DF50A7592BFC7D43008D638B /* PasswordField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordField.swift; sourceTree = "<group>"; };
 		DF7229772BF82C66001EAD77 /* Shortest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shortest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF72297A2BF82C66001EAD77 /* ShortestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortestApp.swift; sourceTree = "<group>"; };
 		DF72297C2BF82C66001EAD77 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -72,6 +76,15 @@
 				DF50A7542BFC5F4A008D638B /* SignInViewModel.swift */,
 			);
 			path = Auth;
+			sourceTree = "<group>";
+		};
+		DF50A75B2BFC7D6F008D638B /* EmailSignInView */ = {
+			isa = PBXGroup;
+			children = (
+				DF50A7572BFC7A89008D638B /* EmailField.swift */,
+				DF50A7592BFC7D43008D638B /* PasswordField.swift */,
+			);
+			path = EmailSignInView;
 			sourceTree = "<group>";
 		};
 		DF72296E2BF82C66001EAD77 = {
@@ -125,6 +138,7 @@
 		DF7C943A2BF946D800AC1F9B /* AuthView */ = {
 			isa = PBXGroup;
 			children = (
+				DF50A75B2BFC7D6F008D638B /* EmailSignInView */,
 				DF7C94442BFAD33300AC1F9B /* MagicLinkView.swift */,
 				DF7C94482BFB3A4E00AC1F9B /* SignInView.swift */,
 			);
@@ -245,11 +259,13 @@
 				DF7C94492BFB3A4E00AC1F9B /* SignInView.swift in Sources */,
 				DF7C94372BF93FCB00AC1F9B /* Supabase.swift in Sources */,
 				DF72297B2BF82C66001EAD77 /* ShortestApp.swift in Sources */,
+				DF50A75A2BFC7D43008D638B /* PasswordField.swift in Sources */,
 				DF7C94432BF980BB00AC1F9B /* DataModel.swift in Sources */,
 				DF7C944E2BFBDA0B00AC1F9B /* AppleSignIn.swift in Sources */,
 				DF50A7552BFC5F4A008D638B /* SignInViewModel.swift in Sources */,
 				DF7C94472BFAD35600AC1F9B /* ProfileView.swift in Sources */,
 				DF7C94452BFAD33300AC1F9B /* MagicLinkView.swift in Sources */,
+				DF50A7582BFC7A89008D638B /* EmailField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
