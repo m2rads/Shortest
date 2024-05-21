@@ -23,6 +23,23 @@ class AuthManager {
         return AppUser(uid: session.user.id.uuidString, email: session.user.email)
     }
     
+    // MARK: Registration
+    func registerNewUserWithEmail(email: String, password: String) async throws -> AppUser {
+        let registrationRes = try await supabase.auth.signUp(email: email, password: password)
+        guard let session = registrationRes.session else {
+            print(" no session when registering user")
+            throw NSError()
+        }
+        return AppUser(uid: session.user.id.uuidString, email: session.user.email)
+    }
+    
+    // MARK: Sign In
+    func signInWithEmail(email: String, password: String) async throws -> AppUser {
+        let session = try await supabase.auth.signIn(email: email, password: password)
+        return AppUser(uid: session.user.id.uuidString, email: session.user.email)
+        
+    }
+    
     func signInWithApple(idToken: String, nonce: String) async throws -> AppUser {
         let session = try await supabase.auth.signInWithIdToken(credentials: .init(provider: .apple, idToken: idToken, nonce: nonce))
         return AppUser(uid: session.user.id.uuidString, email: session.user.email)

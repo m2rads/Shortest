@@ -11,16 +11,44 @@ import Foundation
 class SignInViewModel: ObservableObject {
     let appleSignIn = AppleSignIn()
     
-    func registerNewUserWith(email: String, password: String) async throws {
-        
+    func isFormValid(email: String, password: String) -> Bool {
+        guard email.isValidEmail(), password.count < 8 else {
+            return false
+        }
+        return true
     }
     
-    func signInWithEmail(email: String, password: String) async throws {
-        
+    func registerNewUserWith(email: String, password: String) async throws -> AppUser {
+        if isFormValid(email: email, password: password) {
+            return try await AuthManager.shared.registerNewUserWithEmail(email: email, password: password)
+        } else {
+            print("Registration form is invalid")
+            throw NSError()
+        }
+    }
+    
+    func signInWithEmail(email: String, password: String) async throws -> AppUser {
+        if isFormValid(email: email, password: password) {
+            return try await AuthManager.shared.signInWithEmail(email: email, password: password)
+        } else {
+            print("Registration form is invalid")
+            throw NSError()
+        }
+
     }
     
     func signInWithApple() async throws -> AppUser {
         let appleResult =  try await appleSignIn.startSignInWithAppleFlow()
         return try await AuthManager.shared.signInWithApple(idToken: appleResult.idToken, nonce: appleResult.nonce)
+    }
+}
+
+extension String {
+    
+    func isValidEmail() -> Bool {
+        let emailFormat = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailFormat)
+        return emailPredicate.evaluate(with: self)
+
     }
 }
