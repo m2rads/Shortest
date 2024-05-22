@@ -9,50 +9,72 @@ import SwiftUI
 import Supabase
 
 struct MagicLinkView: View {
+    @Binding var showMagicLinkView: Bool
     @State var email = ""
     @State var isLoading = false
     @State var result: Result<Void, Error>?
     
     var body: some View {
-        Form {
-            Section {
-                TextField("Email", text: $email)
-                    .textContentType(.emailAddress)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-            }
-            Section {
-                Button("Sign in") {
-                    signInButtonTapped()
-                }
-                .foregroundColor(.black)
-                
-                if isLoading {
-                    ProgressView()
-                }
-            }
-            // optional binding in swift / we check if the result var has value
-            if let result {
+        NavigationView {
+            Form {
                 Section {
-                    switch result {
-                    case .success:
-                        Text("Check your inbox")
-                    case .failure(let error):
-                        Text(error.localizedDescription).foregroundStyle(.red)
+                    TextField("Email", text: $email)
+                        .textContentType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                }
+                Section {
+                    Button("Sign in") {
+                        signInButtonTapped()
+                    }
+                    .foregroundColor(.black)
+                    
+                    if isLoading {
+                        ProgressView()
+                    }
+                }
+                // Optional binding in Swift / we check if the result var has value
+                if let result {
+                    Section {
+                        switch result {
+                        case .success:
+                            Text("Check your inbox")
+                        case .failure(let error):
+                            Text(error.localizedDescription).foregroundStyle(.red)
+                        }
                     }
                 }
             }
-        }
-        // event handling when the user click on the email in their app : deep linking auth
-        .onOpenURL(perform: { url in
-            Task {
-                do {
-                    try await supabase.auth.session(from: url)
-                } catch {
-                    self.result = .failure(error)
+            // Event handling when the user clicks on the email in their app: deep linking auth
+            .onOpenURL(perform: { url in
+                Task {
+                    do {
+                        try await supabase.auth.session(from: url)
+                    } catch {
+                        self.result = .failure(error)
+                    }
                 }
-            }
-        })
+            })
+            .navigationBarTitle("Sign In with Email", displayMode: .inline)
+            .navigationBarItems(leading: Button(action: {
+                withAnimation {
+                    showMagicLinkView = false
+                }
+            }) {
+                Image(systemName: "chevron.left")
+                    .foregroundColor(Color.primary)
+            })
+            .gesture(
+                DragGesture()
+                    .onEnded { gesture in
+                        if gesture.translation.height > 100 {
+                            withAnimation {
+                                showMagicLinkView = false
+                            }
+                        }
+                    }
+            )
+        }
     }
     
     func signInButtonTapped() {
@@ -74,5 +96,5 @@ struct MagicLinkView: View {
 }
 
 #Preview {
-    MagicLinkView()
+    MagicLinkView(showMagicLinkView: .constant(false))
 }
