@@ -9,20 +9,20 @@ import SwiftUI
 
 struct ContentView: View {
     @State var appUser: AppUser?
-
+    
     var body: some View {
         ZStack {
-            if appUser != nil { 
+            if appUser != nil {
                 ChatView(appUser: $appUser)
             } else {
                 SignInView(appUser: $appUser)
             }
         }
-            .onAppear {
-                Task {
-                    try await AuthManager.shared.getCurrentSession()
-                }
+        .onAppear {
+            Task {
+                try await AuthManager.shared.getCurrentSession()
             }
+        }
     }
 }
 

@@ -67,7 +67,7 @@ struct SignInView: View {
             .background(Color(UIColor.systemBackground).edgesIgnoringSafeArea(.all))
             
             if showMagicLinkView {
-                MagicLinkView(showMagicLinkView: $showMagicLinkView)
+                MagicLinkView(appUser: $appUser, showMagicLinkView: $showMagicLinkView)
                     .transition(.move(edge: .bottom))
             }
         }

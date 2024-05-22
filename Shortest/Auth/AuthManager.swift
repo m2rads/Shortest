@@ -23,6 +23,11 @@ class AuthManager {
         return AppUser(uid: session.user.id.uuidString, email: session.user.email)
     }
     
+    func getCurrentSessionFromUrl(url: URL) async throws -> AppUser {
+        let session = try await supabase.auth.session(from: url)
+        return AppUser(uid: session.user.id.uuidString, email: session.user.email)
+    }
+    
     // MARK: Registration
     func registerNewUserWithEmail(email: String, password: String) async throws -> AppUser {
         let registrationRes = try await supabase.auth.signUp(email: email, password: password)
@@ -34,6 +39,13 @@ class AuthManager {
     }
     
     // MARK: Sign In
+    func signInWithMagicLink(email: String) async throws {
+        try await supabase.auth.signInWithOTP(
+            email: email,
+            redirectTo: URL(string: "app.shortest://")
+        )
+    }
+    
     func signInWithEmail(email: String, password: String) async throws -> AppUser {
         let session = try await supabase.auth.signIn(email: email, password: password)
         return AppUser(uid: session.user.id.uuidString, email: session.user.email)

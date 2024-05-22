@@ -18,6 +18,19 @@ class SignInViewModel: ObservableObject {
         return true
     }
     
+    func getCurrentSessionFromUrl(Url: URL) async throws -> AppUser {
+        return try await AuthManager.shared.getCurrentSessionFromUrl(url: Url)
+    }
+    
+    func signInWithMagicLink(email: String) async throws {
+        if email.isValidEmail() {
+            try await AuthManager.shared.signInWithMagicLink(email: email)
+        } else {
+            print("Registration email is invalid")
+            throw NSError()
+        }
+    }
+    
     func registerNewUserWith(email: String, password: String) async throws -> AppUser {
         if isFormValid(email: email, password: password) {
             return try await AuthManager.shared.registerNewUserWithEmail(email: email, password: password)

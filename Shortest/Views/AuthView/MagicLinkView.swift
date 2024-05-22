@@ -9,10 +9,13 @@ import SwiftUI
 import Supabase
 
 struct MagicLinkView: View {
-    @Binding var showMagicLinkView: Bool
+    @StateObject var viewModel = SignInViewModel()
     @State var email = ""
     @State var isLoading = false
     @State var result: Result<Void, Error>?
+    
+    @Binding var appUser: AppUser?
+    @Binding var showMagicLinkView: Bool
     
     var body: some View {
         NavigationView {
@@ -80,6 +83,16 @@ struct MagicLinkView: View {
                         }
                     }
             )
+            .onOpenURL(perform: { url in
+                Task {
+                    do {
+                        let appUser = try await viewModel.getCurrentSessionFromUrl(Url: url)
+                        self.appUser = appUser
+                    } catch {
+                        self.result = .failure(error)
+                    }
+                }
+            })
         }
     }
     
@@ -89,10 +102,7 @@ struct MagicLinkView: View {
             defer { isLoading = false }
             
             do {
-                try await supabase.auth.signInWithOTP(
-                    email: email,
-                    redirectTo: URL(string: "app.shortest://")
-                )
+                try await viewModel.signInWithMagicLink(email: email)
                 result = .success(())
             } catch {
                 result = .failure(error)
@@ -102,5 +112,5 @@ struct MagicLinkView: View {
 }
 
 #Preview {
-    MagicLinkView(showMagicLinkView: .constant(false))
+    MagicLinkView(appUser: .constant(.init(uid: "1234", email: "hello@example.com")), showMagicLinkView: .constant(false))
 }
