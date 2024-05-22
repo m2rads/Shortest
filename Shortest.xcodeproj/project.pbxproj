@@ -30,7 +30,7 @@
 		DF7C94372BF93FCB00AC1F9B /* Supabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94362BF93FCB00AC1F9B /* Supabase.swift */; };
 		DF7C94432BF980BB00AC1F9B /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94422BF980BB00AC1F9B /* DataModel.swift */; };
 		DF7C94452BFAD33300AC1F9B /* MagicLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94442BFAD33300AC1F9B /* MagicLinkView.swift */; };
-		DF7C94472BFAD35600AC1F9B /* ProfileView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94462BFAD35600AC1F9B /* ProfileView2.swift */; };
+		DF7C94472BFAD35600AC1F9B /* EditProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94462BFAD35600AC1F9B /* EditProfile.swift */; };
 		DF7C94492BFB3A4E00AC1F9B /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94482BFB3A4E00AC1F9B /* SignInView.swift */; };
 		DF7C944C2BFBD84400AC1F9B /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C944B2BFBD84400AC1F9B /* AuthManager.swift */; };
 		DF7C944E2BFBDA0B00AC1F9B /* AppleSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C944D2BFBDA0B00AC1F9B /* AppleSignIn.swift */; };
@@ -56,7 +56,7 @@
 		DF7C943D2BF965FC00AC1F9B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DF7C94422BF980BB00AC1F9B /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		DF7C94442BFAD33300AC1F9B /* MagicLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicLinkView.swift; sourceTree = "<group>"; };
-		DF7C94462BFAD35600AC1F9B /* ProfileView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView2.swift; sourceTree = "<group>"; };
+		DF7C94462BFAD35600AC1F9B /* EditProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfile.swift; sourceTree = "<group>"; };
 		DF7C94482BFB3A4E00AC1F9B /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		DF7C944B2BFBD84400AC1F9B /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		DF7C944D2BFBDA0B00AC1F9B /* AppleSignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignIn.swift; sourceTree = "<group>"; };
@@ -172,7 +172,7 @@
 		DF7C943E2BF97D8800AC1F9B /* AccountView */ = {
 			isa = PBXGroup;
 			children = (
-				DF7C94462BFAD35600AC1F9B /* ProfileView2.swift */,
+				DF7C94462BFAD35600AC1F9B /* EditProfile.swift */,
 				DF50A7522BFC45F6008D638B /* ChatView.swift */,
 				DF50A7692BFDC697008D638B /* ProfileView.swift */,
 			);
@@ -293,7 +293,7 @@
 				DF7C94432BF980BB00AC1F9B /* DataModel.swift in Sources */,
 				DF7C944E2BFBDA0B00AC1F9B /* AppleSignIn.swift in Sources */,
 				DF50A7552BFC5F4A008D638B /* SignInViewModel.swift in Sources */,
-				DF7C94472BFAD35600AC1F9B /* ProfileView2.swift in Sources */,
+				DF7C94472BFAD35600AC1F9B /* EditProfile.swift in Sources */,
 				DF7C94452BFAD33300AC1F9B /* MagicLinkView.swift in Sources */,
 				DF50A76A2BFDC697008D638B /* ProfileView.swift in Sources */,
 				DF50A7582BFC7A89008D638B /* EmailField.swift in Sources */,
