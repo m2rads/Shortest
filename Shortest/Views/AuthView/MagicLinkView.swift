@@ -16,46 +16,52 @@ struct MagicLinkView: View {
     
     var body: some View {
         NavigationView {
-            Form {
-                Section {
-                    TextField("Email", text: $email)
-                        .textContentType(.emailAddress)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                }
-                Section {
-                    Button("Sign in") {
-                        signInButtonTapped()
-                    }
-                    .foregroundColor(.black)
-                    
-                    if isLoading {
-                        ProgressView()
-                    }
-                }
-                // Optional binding in Swift / we check if the result var has value
-                if let result {
-                    Section {
-                        switch result {
-                        case .success:
-                            Text("Check your inbox")
-                        case .failure(let error):
-                            Text(error.localizedDescription).foregroundStyle(.red)
+            VStack(spacing: 20) {
+                // Email Text Field
+                TextField("Email", text: $email)
+                    .padding()
+                    .background(Color(.secondarySystemBackground))
+                    .cornerRadius(15)
+                    .textContentType(.emailAddress)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+
+                // Sign In Button
+                Button(action: {
+                    signInButtonTapped()
+                }) {
+                    Text("Sign in")
+                        .padding()
+                        .foregroundColor(Color(uiColor: .systemBackground))
+                        .frame(maxWidth: .infinity)
+                        .background {
+                            RoundedRectangle(cornerRadius: 15, style: .continuous)
+                                .foregroundColor(Color(uiColor: .label))
                         }
+                }
+
+                // Loading Indicator
+                if isLoading {
+                    ProgressView()
+                }
+                
+                // Result Message
+                if let result {
+                    switch result {
+                    case .success:
+                        Text("Check your inbox")
+                            .foregroundColor(.green)
+                    case .failure(let error):
+                        Text(error.localizedDescription)
+                            .foregroundColor(.red)
                     }
                 }
+                Spacer()
             }
-            // Event handling when the user clicks on the email in their app: deep linking auth
-            .onOpenURL(perform: { url in
-                Task {
-                    do {
-                        try await supabase.auth.session(from: url)
-                    } catch {
-                        self.result = .failure(error)
-                    }
-                }
-            })
-            .navigationBarTitle("Sign In with Email", displayMode: .inline)
+            .padding(.top, 50)
+            .padding()
+            .background(Color(.systemBackground).edgesIgnoringSafeArea(.all))
+            .navigationBarTitle("Magic Link Sign In", displayMode: .inline)
             .navigationBarItems(leading: Button(action: {
                 withAnimation {
                     showMagicLinkView = false
