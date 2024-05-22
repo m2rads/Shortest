@@ -25,9 +25,24 @@ struct ProfileView: View {
                             .padding()
                     }
                     Spacer()
-                    Button(action: {
-                        // Action for editing profile
-                    }) {
+                    Menu {
+                        Button(action: {
+                            // Action for editing profile
+                        }) {
+                            Text("Edit Profile")
+                        }
+                        Button(action: {
+                            Task {
+                                do {
+                                    try await AuthManager.shared.signOut()
+                                } catch {
+                                    print("unable to sign out at this time")
+                                }
+                            }
+                        }) {
+                            Text("Sign Out")
+                        }
+                    } label: {
                         Image(systemName: "ellipsis")
                             .foregroundColor(.gray)
                             .padding()
@@ -101,7 +116,7 @@ struct ProfileView: View {
                     Spacer()
                 }
             }
-            .padding(.top, 20) // Added top padding for margin
+            .padding(.top, 20)
         }
         .edgesIgnoringSafeArea(.top)
     }
