@@ -13,7 +13,8 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             if appUser != nil {
-                ChatView(appUser: $appUser)
+//                ChatView(appUser: $appUser)
+                ProfileView()
             } else {
                 SignInView(appUser: $appUser)
             }

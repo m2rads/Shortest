@@ -1,104 +1,108 @@
 //
-//  Profile.swift
+//  ProfileView.swift
 //  Shortest
 //
-//  Created by m2rads on 2024-05-18.
+//  Created by m2rads on 2024-05-21.
 //
 
 import SwiftUI
-import Supabase
 
 struct ProfileView: View {
-    @State var username = ""
-    @State var fullName = ""
-    @State var website = ""
-    
-    @State var isLoading = false
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        NavigationStack {
-          Form {
-            Section {
-              TextField("Username", text: $username)
-                .textContentType(.username)
-                .textInputAutocapitalization(.never)
-              TextField("Full name", text: $fullName)
-                .textContentType(.name)
-              TextField("Website", text: $website)
-                .textContentType(.URL)
-                .textInputAutocapitalization(.never)
-            }
-
-            Section {
-              Button("Update profile") {
-                updateProfileButtonTapped()
-              }
-              .bold()
-
-              if isLoading {
-                ProgressView()
-              }
-            }
-          }
-          .navigationTitle("Profile")
-          .toolbar(content: {
-            ToolbarItem(placement: .topBarLeading){
-              Button("Sign out", role: .destructive) {
-                Task {
-                  try? await supabase.auth.signOut()
+        ScrollView {
+            Spacer()
+            VStack(alignment: .leading) {
+                // Top buttons for navigation and editing
+                Spacer()
+                HStack {
+                    Button(action: {
+                        // Action for going back
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.gray)
+                            .padding()
+                    }
+                    Spacer()
+                    Button(action: {
+                        // Action for editing profile
+                    }) {
+                        Image(systemName: "ellipsis")
+                            .foregroundColor(.gray)
+                            .padding()
+                    }
                 }
-              }
-            }
-          })
-        }
-        .task {
-          await getInitialProfile()
-        }
-      }
-    
-    func getInitialProfile() async {
-        do {
-            let currentUser = try await supabase.auth.session.user
-
-            let profile: Profile = try await supabase
-                .from("profiles")
-                .select()
-                .eq("id", value: currentUser.id)
-                .single()
-                .execute()
-                .value
-            
-            self.username = profile.username ?? ""
-            self.fullName = profile.fullName ?? ""
-            self.website = profile.website ?? ""
-                        
-        } catch {
-            debugPrint(error)
-        }
-    }
-
-    func updateProfileButtonTapped() {
-        Task {
-            isLoading = true
-            defer { isLoading = false }
-            do {
-                let currentUser = try await supabase.auth.session.user
+                .padding(.top, 10)
                 
-                try await supabase
-                    .from("profiles")
-                    .update(
-                        UpdateProfileParams(
-                            username: username,
-                            fullName: fullName,
-                            website: website
-                        )
-                    )
-                    .eq("id", value: currentUser.id)
-                    .execute()
-            } catch {
-                debugPrint(error)
+                // Profile picture and info
+                HStack(alignment: .top) {
+                    Image("profilePicture")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 80, height: 80)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.white, lineWidth: 4))
+                        .padding(.leading)
+                    
+                    VStack(alignment: .leading) {
+                        Text("@Mohrad23")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        
+                        Text("Mohammad Rad")
+                            .font(.title2)
+                            .bold()
+                    }
+                    .padding(.leading)
+                    Spacer()
+                }
+                .padding(.top, 20)
+                .padding(.bottom, 20)
+                
+                // Bio and website
+                VStack(alignment: .leading) {
+                    Text("just a dude who codes · my notebook 👉 [github.com/m2rads](https://github.com/m2rads)")
+                        .font(.body)
+                        .padding(.bottom, 5)
+                    
+                    HStack {
+                        HStack {
+                            Text("4")
+                                .bold()
+                            Text("Following")
+                            Text("1")
+                                .bold()
+                            Text("Followers")
+                        }
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+                        .padding(.top, 5)
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            print("clicked")
+                        }, label: {
+                            Image(systemName: "gift.circle.fill")
+                                .foregroundColor(.gray)
+                        })
+                    }
+                }
+                .padding(.horizontal)
+                
+                // Empty state for messages
+                VStack {
+                    Text("No thoughts yet")
+                        .font(.body)
+                        .foregroundColor(.gray)
+                        .padding()
+                    Spacer()
+                }
             }
+            .padding(.top, 20) // Added top padding for margin
         }
+        .edgesIgnoringSafeArea(.top)
     }
 }
 
