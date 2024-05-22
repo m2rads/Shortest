@@ -87,6 +87,7 @@ struct ProfileView: View {
                             Image(systemName: "gift.circle.fill")
                                 .foregroundColor(.gray)
                         })
+                        .padding(.bottom, -6)
                     }
                 }
                 .padding(.horizontal)
