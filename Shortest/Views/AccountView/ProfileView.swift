@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @Binding var appUser: AppUser?
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
@@ -35,6 +36,7 @@ struct ProfileView: View {
                             Task {
                                 do {
                                     try await AuthManager.shared.signOut()
+                                    self.appUser = nil
                                 } catch {
                                     print("unable to sign out at this time")
                                 }
@@ -123,5 +125,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView()
+    ProfileView(appUser: .constant(.init(uid: "12345", email: "hello@example.com")))
 }
