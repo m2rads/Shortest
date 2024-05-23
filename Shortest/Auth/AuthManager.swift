@@ -43,7 +43,8 @@ class AuthManager {
     func signInWithMagicLink(email: String) async throws {
         try await supabase.auth.signInWithOTP(
             email: email,
-            redirectTo: URL(string: "app.shortest://")
+            redirectTo: URL(string: "app.shortest://"),
+            shouldCreateUser: false
         )
     }
     
