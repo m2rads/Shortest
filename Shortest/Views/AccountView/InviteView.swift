@@ -1,21 +1,18 @@
-//
-//  Login.swift
+//  InviteView.swift
 //  Shortest
 //
-//  Created by m2rads on 2024-05-18.
+//  Created by m2rads on 2024-05-22.
 //
 
 import SwiftUI
-import Supabase
 
-struct MagicLinkView: View {
-    @StateObject var viewModel = SignInViewModel()
+struct InviteView: View {
+    @Binding var showInviteView: Bool
+    @Binding var appUser: AppUser?
+
     @State var email = ""
     @State var isLoading = false
     @State var result: Result<Void, Error>?
-    
-    @Binding var appUser: AppUser?
-    @Binding var showMagicLinkView: Bool
     
     var body: some View {
         NavigationView {
@@ -28,12 +25,12 @@ struct MagicLinkView: View {
                     .textContentType(.emailAddress)
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
-
-                // Sign In Button
+                
+                // Invite Button
                 Button(action: {
-                    signInButtonTapped()
+                    inviteUser()
                 }) {
-                    Text("Sign in")
+                    Text("Invite")
                         .padding()
                         .foregroundColor(Color(uiColor: .systemBackground))
                         .frame(maxWidth: .infinity)
@@ -42,7 +39,7 @@ struct MagicLinkView: View {
                                 .foregroundColor(Color(uiColor: .label))
                         }
                 }
-
+                
                 // Loading Indicator
                 if isLoading {
                     ProgressView()
@@ -64,13 +61,13 @@ struct MagicLinkView: View {
             .padding(.top, 50)
             .padding()
             .background(Color(.systemBackground).edgesIgnoringSafeArea(.all))
-            .navigationBarTitle("Magic Link Sign In", displayMode: .inline)
+            .navigationBarTitle("Invite a friend", displayMode: .inline)
             .navigationBarItems(leading: Button(action: {
                 withAnimation {
-                    showMagicLinkView = false
+                    showInviteView = false
                 }
             }) {
-                Image(systemName: "chevron.left")
+                Image(systemName: "chevron.down")
                     .foregroundColor(Color.primary)
             })
             .gesture(
@@ -78,39 +75,37 @@ struct MagicLinkView: View {
                     .onEnded { gesture in
                         if gesture.translation.height > 100 {
                             withAnimation {
-                                showMagicLinkView = false
+                                showInviteView = false
                             }
                         }
                     }
             )
-            .onOpenURL(perform: { url in
-                Task {
-                    do {
-                        let appUser = try await viewModel.getCurrentSessionFromUrl(Url: url)
-                        self.appUser = appUser
-                    } catch {
-                        self.result = .failure(error)
-                    }
-                }
-            })
         }
     }
     
-    func signInButtonTapped() {
-        Task {
-            isLoading = true
-            defer { isLoading = false }
-            
-            do {
-                try await viewModel.signInWithMagicLink(email: email)
-                result = .success(())
-            } catch {
-                result = .failure(error)
+    private func inviteUser() {
+        guard !email.isEmpty else {
+            self.result = .failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Email cannot be empty"]))
+            return
+        }
+        
+        guard let accessToken = appUser?.accessToken else {
+            self.result = .failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Access token is missing"]))
+            return
+        }
+
+        isLoading = true
+        result = nil
+        
+        NetworkService.shared.inviteUser(email: email, accessToken: accessToken) { result in
+            DispatchQueue.main.async {
+                self.isLoading = false
+                self.result = result
             }
         }
     }
 }
 
 #Preview {
-    MagicLinkView(appUser: .constant(.init(uid: "1234", email: "hello@example.com", accessToken: "")), showMagicLinkView: .constant(false))
+    InviteView(showInviteView: .constant(false), appUser: .constant(.init(uid: "12345", email: "hello@example.com", accessToken: "")))
 }

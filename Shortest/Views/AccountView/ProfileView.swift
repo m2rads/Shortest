@@ -1,4 +1,3 @@
-//
 //  ProfileView.swift
 //  Shortest
 //
@@ -8,6 +7,7 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @State private var showInviteView = false
     @Binding var appUser: AppUser?
     @Environment(\.colorScheme) var colorScheme
     
@@ -62,12 +62,15 @@ struct ProfileView: View {
                             Spacer()
                             
                             Button(action: {
-                                print("clicked")
+                                showInviteView.toggle()
                             }, label: {
                                 Image(systemName: "gift.circle.fill")
                                     .foregroundColor(.gray)
                             })
                             .padding(.bottom, -6)
+                            .fullScreenCover(isPresented: $showInviteView) {
+                                InviteView(showInviteView: $showInviteView, appUser: $appUser)
+                            }
                         }
                     }
                     .padding(.horizontal)
@@ -120,5 +123,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView(appUser: .constant(.init(uid: "12345", email: "hello@example.com")))
+    ProfileView(appUser: .constant(.init(uid: "12345", email: "hello@example.com", accessToken: "")))
 }

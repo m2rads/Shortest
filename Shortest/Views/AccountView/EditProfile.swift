@@ -97,5 +97,5 @@ struct EditProfile: View {
 }
 
 #Preview {
-    EditProfile(appUser: .constant(.init(uid: "12345", email: "hello@example.com")))
+    EditProfile(appUser: .constant(.init(uid: "12345", email: "hello@example.com", accessToken: "")))
 }

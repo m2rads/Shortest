@@ -36,5 +36,5 @@ struct ChatView: View {
 }
 
 #Preview {
-    ChatView(appUser: .constant(.init(uid: "12345", email: "hello@example.com")))
+    ChatView(appUser: .constant(.init(uid: "12345", email: "hello@example.com", accessToken: "")))
 }

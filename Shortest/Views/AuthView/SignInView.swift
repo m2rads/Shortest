@@ -75,5 +75,5 @@ struct SignInView: View {
 }
 
 #Preview {
-    SignInView( appUser: .constant(.init(uid: "1234", email: "hello@example.com")))
+    SignInView( appUser: .constant(.init(uid: "1234", email: "hello@example.com", accessToken: "")))
 }

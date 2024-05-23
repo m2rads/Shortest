@@ -17,6 +17,8 @@
 		DF50A7662BFD2A4A008D638B /* PasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7652BFD2A49008D638B /* PasswordView.swift */; };
 		DF50A7682BFD2A62008D638B /* ProfilePictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7672BFD2A62008D638B /* ProfilePictureView.swift */; };
 		DF50A76A2BFDC697008D638B /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7692BFDC697008D638B /* ProfileView.swift */; };
+		DF606A3D2BFF1C4600EAF10C /* InviteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF606A3C2BFF1C4600EAF10C /* InviteView.swift */; };
+		DF606A3F2BFF228700EAF10C /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF606A3E2BFF228700EAF10C /* NetworkService.swift */; };
 		DF72297B2BF82C66001EAD77 /* ShortestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF72297A2BF82C66001EAD77 /* ShortestApp.swift */; };
 		DF72297D2BF82C66001EAD77 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF72297C2BF82C66001EAD77 /* ContentView.swift */; };
 		DF72297F2BF82C68001EAD77 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DF72297E2BF82C68001EAD77 /* Assets.xcassets */; };
@@ -47,6 +49,8 @@
 		DF50A7652BFD2A49008D638B /* PasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordView.swift; sourceTree = "<group>"; };
 		DF50A7672BFD2A62008D638B /* ProfilePictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePictureView.swift; sourceTree = "<group>"; };
 		DF50A7692BFDC697008D638B /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		DF606A3C2BFF1C4600EAF10C /* InviteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteView.swift; sourceTree = "<group>"; };
+		DF606A3E2BFF228700EAF10C /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		DF7229772BF82C66001EAD77 /* Shortest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shortest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF72297A2BF82C66001EAD77 /* ShortestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortestApp.swift; sourceTree = "<group>"; };
 		DF72297C2BF82C66001EAD77 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -155,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				DF7C94362BF93FCB00AC1F9B /* Supabase.swift */,
+				DF606A3E2BFF228700EAF10C /* NetworkService.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -173,8 +178,8 @@
 			isa = PBXGroup;
 			children = (
 				DF7C94462BFAD35600AC1F9B /* EditProfile.swift */,
-				DF50A7522BFC45F6008D638B /* ChatView.swift */,
 				DF50A7692BFDC697008D638B /* ProfileView.swift */,
+				DF606A3C2BFF1C4600EAF10C /* InviteView.swift */,
 			);
 			path = AccountView;
 			sourceTree = "<group>";
@@ -191,8 +196,9 @@
 			isa = PBXGroup;
 			children = (
 				DF72297C2BF82C66001EAD77 /* ContentView.swift */,
-				DF50A75C2BFD27F0008D638B /* RegistrationView */,
+				DF50A7522BFC45F6008D638B /* ChatView.swift */,
 				DF7C943E2BF97D8800AC1F9B /* AccountView */,
+				DF50A75C2BFD27F0008D638B /* RegistrationView */,
 				DF7C943A2BF946D800AC1F9B /* AuthView */,
 			);
 			path = Views;
@@ -288,9 +294,11 @@
 				DF7C94492BFB3A4E00AC1F9B /* SignInView.swift in Sources */,
 				DF7C94372BF93FCB00AC1F9B /* Supabase.swift in Sources */,
 				DF72297B2BF82C66001EAD77 /* ShortestApp.swift in Sources */,
+				DF606A3D2BFF1C4600EAF10C /* InviteView.swift in Sources */,
 				DF50A75A2BFC7D43008D638B /* PasswordField.swift in Sources */,
 				DF50A7642BFD2A1D008D638B /* UsernameView.swift in Sources */,
 				DF7C94432BF980BB00AC1F9B /* DataModel.swift in Sources */,
+				DF606A3F2BFF228700EAF10C /* NetworkService.swift in Sources */,
 				DF7C944E2BFBDA0B00AC1F9B /* AppleSignIn.swift in Sources */,
 				DF50A7552BFC5F4A008D638B /* SignInViewModel.swift in Sources */,
 				DF7C94472BFAD35600AC1F9B /* EditProfile.swift in Sources */,

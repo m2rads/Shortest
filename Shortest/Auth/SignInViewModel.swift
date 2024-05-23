@@ -55,7 +55,6 @@ class SignInViewModel: ObservableObject {
         return try await AuthManager.shared.signInWithApple(idToken: appleResult.idToken, nonce: appleResult.nonce)
     }
 }
-
 extension String {
     
     func isValidEmail() -> Bool {
