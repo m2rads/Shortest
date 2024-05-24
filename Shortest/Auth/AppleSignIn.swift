@@ -12,33 +12,31 @@ import AuthenticationServices
 struct AppleSignInResult {
     let idToken: String
     let nonce: String
+    let email: String?
 }
 
 @MainActor
 class AppleSignIn: NSObject {
     
     fileprivate var currentNonce: String?
-    private var completionHandler: ((Result<AppleSignInResult, Error>) -> Void)?
+    private var continuation: CheckedContinuation<AppleSignInResult, Error>?
     
     func startSignInWithAppleFlow() async throws -> AppleSignInResult {
-        try await withCheckedThrowingContinuation({ [weak self] continuation in
-            self?.startSignInWithAppleFlow { result in
-                continuation.resume(with: result)
-                return
-            }
-            
-        })
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<AppleSignInResult, Error>) in
+            self.continuation = continuation
+            self.startSignInWithAppleFlow()
+        }
     }
     
-    private func startSignInWithAppleFlow(completion: @escaping (Result<AppleSignInResult, Error>) -> Void) {
+    private func startSignInWithAppleFlow() {
         guard let topVC = UIApplication.getTopViewController() else {
-            // TODO: specify the type of error
-            completion(.failure(NSError()))
+            print("Unable to get top view controller")
+            continuation?.resume(throwing: NSError(domain: "AppleSignInError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unable to get top view controller."]))
+            continuation = nil
             return
         }
         let nonce = randomNonceString()
         currentNonce = nonce
-        completionHandler = completion
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         let request = appleIDProvider.createRequest()
         request.requestedScopes = [.fullName, .email]
@@ -64,7 +62,6 @@ class AppleSignIn: NSObject {
         Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
         
         let nonce = randomBytes.map { byte in
-            // Pick a random character from the set, wrapping around if needed.
             charset[Int(byte) % charset.count]
         }
         
@@ -80,9 +77,7 @@ class AppleSignIn: NSObject {
         
         return hashString
     }
-    
 }
-
 
 extension AppleSignIn: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
@@ -91,33 +86,38 @@ extension AppleSignIn: ASAuthorizationControllerDelegate, ASAuthorizationControl
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-            guard let nonce = currentNonce, let completion = completionHandler else {
+            guard let nonce = currentNonce else {
                 fatalError("Invalid state: A login callback was received, but no login request was sent.")
             }
             guard let appleIDToken = appleIDCredential.identityToken else {
                 print("Unable to fetch identity token")
-                // TODO: specify the type of error
-                completion(.failure(NSError()))
+                continuation?.resume(throwing: NSError(domain: "AppleSignInError", code: -2, userInfo: [NSLocalizedDescriptionKey: "Unable to fetch identity token."]))
+                continuation = nil
                 return
             }
             guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
                 print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
-                // TODO: specify the type of error
-                completion(.failure(NSError()))
+                continuation?.resume(throwing: NSError(domain: "AppleSignInError", code: -3, userInfo: [NSLocalizedDescriptionKey: "Unable to serialize token string from data."]))
+                continuation = nil
                 return
             }
             
-            let appleSignInResult = AppleSignInResult(idToken: idTokenString, nonce: nonce)
-            completion(.success(appleSignInResult))
+            let email = appleIDCredential.email
+            print("Apple sign-in successful. ID Token: \(idTokenString), Nonce: \(nonce), Email: \(String(describing: email))")
+            let appleSignInResult = AppleSignInResult(idToken: idTokenString, nonce: nonce, email: email)
+            continuation?.resume(returning: appleSignInResult)
+            continuation = nil
+        } else {
+            continuation?.resume(throwing: NSError(domain: "AppleSignInError", code: -4, userInfo: [NSLocalizedDescriptionKey: "Unexpected credential type."]))
+            continuation = nil
         }
     }
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        // Handle error.
         print("Sign in with Apple errored: \(error)")
+        continuation?.resume(throwing: error)
+        continuation = nil
     }
-    
-    
 }
 
 
