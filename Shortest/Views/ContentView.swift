@@ -37,6 +37,7 @@ struct ContentView: View {
                         print("url \(url)")
                         if let (accessToken, refreshToken) = extractTokens(from: url) {
                             let appUser = try await AuthManager.shared.setInviteSession(accessToken: accessToken, refreshToken: refreshToken)
+                            self.appUser = appUser
                             showRegisterView.toggle()
                             print("deeplink result: \(String(describing: appUser))")
                         } else {

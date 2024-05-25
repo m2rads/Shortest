@@ -14,27 +14,29 @@ struct EmailView: View {
     @State private var showError = false
     
     var body: some View {
-        VStack {
-            TextField("Enter your email", text: $email)
-                .padding()
-                .background(Color(.secondarySystemBackground))
-                .cornerRadius(15)
-                .textContentType(.emailAddress)
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-                .disabled(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
-            
-            if showError {
-                Text("Please enter a valid email address")
-                    .foregroundColor(.red)
-            }
-            
-            Button(action: validateAndProceed) {
-                Text("Next")
+        NavigationView {
+            VStack {
+                TextField("Enter your email", text: $email)
                     .padding()
+                    .background(Color(.secondarySystemBackground))
+                    .cornerRadius(15)
+                    .textContentType(.emailAddress)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .disabled(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
+                
+                if showError {
+                    Text("Please enter a valid email address")
+                        .foregroundColor(.red)
+                }
+                
+                Button(action: validateAndProceed) {
+                    Text("Next")
+                        .padding()
+                }
             }
+            .padding()
         }
-        .padding()
     }
     
     func validateAndProceed() {

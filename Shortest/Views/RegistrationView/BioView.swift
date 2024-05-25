@@ -14,7 +14,7 @@ struct BioView: View {
     
     var body: some View {
         VStack {
-            SecureField("Enter your password", text: $bio)
+            TextField("Enter your bio", text: $bio)
                 .padding()
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(15)
@@ -34,6 +34,7 @@ struct BioView: View {
                 }
             }
         }
+        .navigationTitle("bio")
         .padding()
     }
 }
