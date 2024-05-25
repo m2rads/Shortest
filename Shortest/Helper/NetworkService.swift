@@ -13,7 +13,7 @@ class NetworkService {
     private init() {}
     
     func inviteUser(email: String, accessToken: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let url = URL(string: "http://localhost:3000/api/invite") else {
+        guard let url = URL(string: "https://shortest-support.vercel.app/api/invite") else {
             completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])))
             return
         }
