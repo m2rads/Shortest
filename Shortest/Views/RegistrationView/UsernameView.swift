@@ -16,7 +16,11 @@ struct UsernameView: View {
         VStack {
             TextField("Enter your username", text: $username)
                 .padding()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(15)
+                .textContentType(.emailAddress)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
             
             HStack {
                 Button(action: previousStep) {

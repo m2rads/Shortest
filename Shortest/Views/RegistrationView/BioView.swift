@@ -16,7 +16,11 @@ struct BioView: View {
         VStack {
             SecureField("Enter your password", text: $bio)
                 .padding()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(15)
+                .textContentType(.emailAddress)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
             
             HStack {
                 Button(action: previousStep) {
