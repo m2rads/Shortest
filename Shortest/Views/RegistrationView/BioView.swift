@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct PasswordView: View {
-    @Binding var password: String
+struct BioView: View {
+    @Binding var bio: String
     var nextStep: () -> Void
     var previousStep: () -> Void
     
     var body: some View {
         VStack {
-            SecureField("Enter your password", text: $password)
+            SecureField("Enter your password", text: $bio)
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             
@@ -36,5 +36,5 @@ struct PasswordView: View {
 
 
 #Preview {
-    PasswordView(password: .constant(""), nextStep: {}, previousStep: {})
+    BioView(bio: .constant(""), nextStep: {}, previousStep: {})
 }
