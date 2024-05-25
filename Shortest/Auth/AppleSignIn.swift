@@ -12,7 +12,6 @@ import AuthenticationServices
 struct AppleSignInResult {
     let idToken: String
     let nonce: String
-    let email: String?
 }
 
 @MainActor
@@ -97,18 +96,18 @@ extension AppleSignIn: ASAuthorizationControllerDelegate, ASAuthorizationControl
             }
             guard let appleIDToken = appleIDCredential.identityToken else {
                 print("Unable to fetch identity token")
+                // TODO: specify the type of error
                 completion(.failure(NSError()))
                 return
             }
             guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
                 print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+                // TODO: specify the type of error
                 completion(.failure(NSError()))
                 return
             }
             
-            let email = appleIDCredential.email
-            
-            let appleSignInResult = AppleSignInResult(idToken: idTokenString, nonce: nonce, email: email)
+            let appleSignInResult = AppleSignInResult(idToken: idTokenString, nonce: nonce)
             completion(.success(appleSignInResult))
         }
     }
@@ -117,8 +116,9 @@ extension AppleSignIn: ASAuthorizationControllerDelegate, ASAuthorizationControl
         // Handle error.
         print("Sign in with Apple errored: \(error)")
     }
+    
+    
 }
-
 
 
 extension UIViewController: ASAuthorizationControllerPresentationContextProviding {
