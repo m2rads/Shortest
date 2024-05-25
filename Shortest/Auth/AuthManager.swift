@@ -19,6 +19,11 @@ class AuthManager {
     
     private init() {}
     
+    func setInviteSession(accessToken: String, refreshToken: String) async throws -> AppUser {
+        let session = try await supabase.auth.setSession(accessToken: accessToken, refreshToken: refreshToken)
+        return AppUser(uid: session.user.id.uuidString, email: session.user.email, accessToken: session.accessToken)
+    }
+    
     func getCurrentSession() async throws -> AppUser {
         let session = try await supabase.auth.session
         return AppUser(uid: session.user.id.uuidString, email: session.user.email, accessToken: session.accessToken)
