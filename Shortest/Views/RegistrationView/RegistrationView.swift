@@ -11,8 +11,10 @@ struct RegistrationView: View {
     @State private var currentStep = 0
     @State private var email = ""
     @State private var username = ""
-    @State private var password = ""
+    @State private var bio = ""
     @State private var profilePicture = UIImage()
+    @Binding var showRegisterView: Bool
+    @Binding var appUser: AppUser?
     
     var body: some View {
         VStack {
@@ -22,13 +24,28 @@ struct RegistrationView: View {
             case 1:
                 UsernameView(username: $username, nextStep: nextStep, previousStep: previousStep)
             case 2:
-                PasswordView(password: $password, nextStep: nextStep, previousStep: previousStep)
+                BioView(bio: $bio, nextStep: nextStep, previousStep: previousStep)
             case 3:
                 ProfilePictureView(profilePicture: $profilePicture, previousStep: previousStep, finishRegistration: finishRegistration)
             default:
                 Text("Unknown step")
             }
         }
+        .onAppear {
+            if let user = appUser {
+                email = user.email ?? ""
+            }
+        }
+        .gesture(
+            DragGesture()
+                .onEnded { gesture in
+                    if gesture.translation.height > 100 {
+                        withAnimation {
+                            showRegisterView = false
+                        }
+                    }
+                }
+        )
     }
     
     func nextStep() {
@@ -44,11 +61,11 @@ struct RegistrationView: View {
     }
     
     func finishRegistration() {
-        print("Registration finished with email: \(email), username: \(username), password: \(password), profile picture: \(profilePicture)")
+        print("Registration finished with email: \(email), username: \(username), bio: \(bio), profile picture: \(profilePicture)")
     }
 }
 
 
 #Preview {
-    RegistrationView()
+    RegistrationView(showRegisterView: .constant(false), appUser: .constant(.init(uid: "", email: "example@hello.com", accessToken: "")))
 }

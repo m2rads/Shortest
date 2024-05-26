@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DF483DA22C0276DE00157084 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF483DA12C0276DE00157084 /* ImagePicker.swift */; };
 		DF50A7532BFC45F6008D638B /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7522BFC45F6008D638B /* ChatView.swift */; };
 		DF50A7552BFC5F4A008D638B /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7542BFC5F4A008D638B /* SignInViewModel.swift */; };
 		DF50A7582BFC7A89008D638B /* EmailField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7572BFC7A89008D638B /* EmailField.swift */; };
@@ -14,7 +15,7 @@
 		DF50A7602BFD299E008D638B /* RegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A75F2BFD299E008D638B /* RegistrationView.swift */; };
 		DF50A7622BFD29B6008D638B /* EmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7612BFD29B6008D638B /* EmailView.swift */; };
 		DF50A7642BFD2A1D008D638B /* UsernameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7632BFD2A1D008D638B /* UsernameView.swift */; };
-		DF50A7662BFD2A4A008D638B /* PasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7652BFD2A49008D638B /* PasswordView.swift */; };
+		DF50A7662BFD2A4A008D638B /* BioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7652BFD2A49008D638B /* BioView.swift */; };
 		DF50A7682BFD2A62008D638B /* ProfilePictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7672BFD2A62008D638B /* ProfilePictureView.swift */; };
 		DF50A76A2BFDC697008D638B /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF50A7692BFDC697008D638B /* ProfileView.swift */; };
 		DF606A3D2BFF1C4600EAF10C /* InviteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF606A3C2BFF1C4600EAF10C /* InviteView.swift */; };
@@ -39,6 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DF483DA12C0276DE00157084 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		DF50A7522BFC45F6008D638B /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		DF50A7542BFC5F4A008D638B /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		DF50A7572BFC7A89008D638B /* EmailField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailField.swift; sourceTree = "<group>"; };
@@ -46,7 +48,7 @@
 		DF50A75F2BFD299E008D638B /* RegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationView.swift; sourceTree = "<group>"; };
 		DF50A7612BFD29B6008D638B /* EmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailView.swift; sourceTree = "<group>"; };
 		DF50A7632BFD2A1D008D638B /* UsernameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsernameView.swift; sourceTree = "<group>"; };
-		DF50A7652BFD2A49008D638B /* PasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordView.swift; sourceTree = "<group>"; };
+		DF50A7652BFD2A49008D638B /* BioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BioView.swift; sourceTree = "<group>"; };
 		DF50A7672BFD2A62008D638B /* ProfilePictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePictureView.swift; sourceTree = "<group>"; };
 		DF50A7692BFDC697008D638B /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		DF606A3C2BFF1C4600EAF10C /* InviteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteView.swift; sourceTree = "<group>"; };
@@ -109,8 +111,9 @@
 				DF50A75F2BFD299E008D638B /* RegistrationView.swift */,
 				DF50A7612BFD29B6008D638B /* EmailView.swift */,
 				DF50A7632BFD2A1D008D638B /* UsernameView.swift */,
-				DF50A7652BFD2A49008D638B /* PasswordView.swift */,
+				DF50A7652BFD2A49008D638B /* BioView.swift */,
 				DF50A7672BFD2A62008D638B /* ProfilePictureView.swift */,
+				DF483DA12C0276DE00157084 /* ImagePicker.swift */,
 			);
 			path = RegistrationView;
 			sourceTree = "<group>";
@@ -287,11 +290,12 @@
 			files = (
 				DF72297D2BF82C66001EAD77 /* ContentView.swift in Sources */,
 				DF50A7682BFD2A62008D638B /* ProfilePictureView.swift in Sources */,
-				DF50A7662BFD2A4A008D638B /* PasswordView.swift in Sources */,
+				DF50A7662BFD2A4A008D638B /* BioView.swift in Sources */,
 				DF7C944C2BFBD84400AC1F9B /* AuthManager.swift in Sources */,
 				DF50A7532BFC45F6008D638B /* ChatView.swift in Sources */,
 				DF50A7602BFD299E008D638B /* RegistrationView.swift in Sources */,
 				DF7C94492BFB3A4E00AC1F9B /* SignInView.swift in Sources */,
+				DF483DA22C0276DE00157084 /* ImagePicker.swift in Sources */,
 				DF7C94372BF93FCB00AC1F9B /* Supabase.swift in Sources */,
 				DF72297B2BF82C66001EAD77 /* ShortestApp.swift in Sources */,
 				DF606A3D2BFF1C4600EAF10C /* InviteView.swift in Sources */,

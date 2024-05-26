@@ -9,6 +9,7 @@ import SwiftUI
 struct InviteView: View {
     @Binding var showInviteView: Bool
     @Binding var appUser: AppUser?
+    @StateObject var viewModel = SignInViewModel()
 
     @State var email = ""
     @State var isLoading = false
@@ -40,12 +41,10 @@ struct InviteView: View {
                         }
                 }
                 
-                // Loading Indicator
                 if isLoading {
                     ProgressView()
                 }
                 
-                // Result Message
                 if let result {
                     switch result {
                     case .success:
@@ -104,6 +103,7 @@ struct InviteView: View {
             }
         }
     }
+
 }
 
 #Preview {

@@ -7,16 +7,20 @@
 
 import SwiftUI
 
-struct PasswordView: View {
-    @Binding var password: String
+struct BioView: View {
+    @Binding var bio: String
     var nextStep: () -> Void
     var previousStep: () -> Void
     
     var body: some View {
         VStack {
-            SecureField("Enter your password", text: $password)
+            TextField("Enter your bio", text: $bio)
                 .padding()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(15)
+                .textContentType(.emailAddress)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
             
             HStack {
                 Button(action: previousStep) {
@@ -30,11 +34,12 @@ struct PasswordView: View {
                 }
             }
         }
+        .navigationTitle("bio")
         .padding()
     }
 }
 
 
 #Preview {
-    PasswordView(password: .constant(""), nextStep: {}, previousStep: {})
+    BioView(bio: .constant(""), nextStep: {}, previousStep: {})
 }
