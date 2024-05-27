@@ -1,20 +1,20 @@
 //
-//  PasswordView.swift
+//  FullNameView.swift
 //  Shortest
 //
-//  Created by m2rads on 2024-05-21.
+//  Created by m2rads on 2024-05-26.
 //
 
 import SwiftUI
 
-struct BioView: View {
-    @Binding var bio: String
+struct FullNameView: View {
+    @Binding var fullName: String
     var nextStep: () -> Void
     var previousStep: () -> Void
     
     var body: some View {
         VStack {
-            TextField("Enter your bio", text: $bio)
+            TextField("Enter your full name", text: $fullName)
                 .padding()
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(15)
@@ -31,15 +31,14 @@ struct BioView: View {
                 Button(action: nextStep) {
                     Text("Next")
                         .padding()
+                        
                 }
             }
         }
-        .navigationTitle("bio")
         .padding()
     }
 }
 
-
 #Preview {
-    BioView(bio: .constant("Just a dude who codes"), nextStep: {}, previousStep: {})
+    FullNameView(fullName: .constant("Mohammad"), nextStep: {}, previousStep: {})
 }

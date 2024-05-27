@@ -41,5 +41,5 @@ struct UsernameView: View {
 
 
 #Preview {
-    UsernameView(username: .constant(""), nextStep: {}, previousStep: {})
+    UsernameView(username: .constant("Mohrad23"), nextStep: {}, previousStep: {})
 }
