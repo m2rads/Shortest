@@ -64,7 +64,7 @@ struct EditProfile: View {
             
             self.username = profile.username ?? ""
             self.fullName = profile.fullName ?? ""
-            self.website = profile.website ?? ""
+//            self.website = profile.website ?? ""
             
         } catch {
             debugPrint(error)
@@ -80,13 +80,7 @@ struct EditProfile: View {
                 
                 try await supabase
                     .from("profiles")
-                    .update(
-                        UpdateProfileParams(
-                            username: username,
-                            fullName: fullName,
-                            website: website
-                        )
-                    )
+                    .update("")
                     .eq("id", value: currentUser.id)
                     .execute()
             } catch {

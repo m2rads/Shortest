@@ -19,6 +19,7 @@ struct EmailView: View {
                 TextField("Enter your email", text: $email)
                     .padding()
                     .background(Color(.secondarySystemBackground))
+                    .foregroundColor(.gray)
                     .cornerRadius(15)
                     .textContentType(.emailAddress)
                     .textInputAutocapitalization(.never)
@@ -57,5 +58,5 @@ struct EmailView: View {
 }
 
 #Preview {
-    EmailView(email: .constant(""), nextStep: {})
+    EmailView(email: .constant("argo.mohrad@gmail.com"), nextStep: {})
 }

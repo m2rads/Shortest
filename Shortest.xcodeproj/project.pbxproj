@@ -37,6 +37,7 @@
 		DF7C94492BFB3A4E00AC1F9B /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C94482BFB3A4E00AC1F9B /* SignInView.swift */; };
 		DF7C944C2BFBD84400AC1F9B /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C944B2BFBD84400AC1F9B /* AuthManager.swift */; };
 		DF7C944E2BFBDA0B00AC1F9B /* AppleSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C944D2BFBDA0B00AC1F9B /* AppleSignIn.swift */; };
+		DF8DBCDF2C03EDFB00271F0A /* FullNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8DBCDE2C03EDFB00271F0A /* FullNameView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,7 @@
 		DF7C944B2BFBD84400AC1F9B /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		DF7C944D2BFBDA0B00AC1F9B /* AppleSignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignIn.swift; sourceTree = "<group>"; };
 		DF7C944F2BFBF14C00AC1F9B /* Shortest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Shortest.entitlements; sourceTree = "<group>"; };
+		DF8DBCDE2C03EDFB00271F0A /* FullNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullNameView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 			children = (
 				DF50A75F2BFD299E008D638B /* RegistrationView.swift */,
 				DF50A7612BFD29B6008D638B /* EmailView.swift */,
+				DF8DBCDE2C03EDFB00271F0A /* FullNameView.swift */,
 				DF50A7632BFD2A1D008D638B /* UsernameView.swift */,
 				DF50A7652BFD2A49008D638B /* BioView.swift */,
 				DF50A7672BFD2A62008D638B /* ProfilePictureView.swift */,
@@ -137,6 +140,7 @@
 		DF7229792BF82C66001EAD77 /* Shortest */ = {
 			isa = PBXGroup;
 			children = (
+				DF8DBCDD2C03B7E400271F0A /* New Group */,
 				DF7C944F2BFBF14C00AC1F9B /* Shortest.entitlements */,
 				DF7C944A2BFBD7FD00AC1F9B /* Views */,
 				DF7C94412BF980A800AC1F9B /* Models */,
@@ -205,6 +209,13 @@
 				DF7C943A2BF946D800AC1F9B /* AuthView */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		DF8DBCDD2C03B7E400271F0A /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "New Group";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -295,6 +306,7 @@
 				DF50A7532BFC45F6008D638B /* ChatView.swift in Sources */,
 				DF50A7602BFD299E008D638B /* RegistrationView.swift in Sources */,
 				DF7C94492BFB3A4E00AC1F9B /* SignInView.swift in Sources */,
+				DF8DBCDF2C03EDFB00271F0A /* FullNameView.swift in Sources */,
 				DF483DA22C0276DE00157084 /* ImagePicker.swift in Sources */,
 				DF7C94372BF93FCB00AC1F9B /* Supabase.swift in Sources */,
 				DF72297B2BF82C66001EAD77 /* ShortestApp.swift in Sources */,

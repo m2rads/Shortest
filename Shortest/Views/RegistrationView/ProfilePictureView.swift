@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProfilePictureView: View {
     @Binding var profilePicture: UIImage
+    @Binding var isLoading: Bool
     var previousStep: () -> Void
     var finishRegistration: () -> Void
     
@@ -53,6 +54,9 @@ struct ProfilePictureView: View {
                 Button(action: finishRegistration) {
                     Text("Finish")
                         .padding()
+                    if isLoading {
+                        ProgressView()
+                    }
                 }
             }
         }
@@ -64,5 +68,5 @@ struct ProfilePictureView: View {
 }
 
 #Preview {
-    ProfilePictureView(profilePicture: .constant(UIImage()), previousStep: {}, finishRegistration: {})
+    ProfilePictureView(profilePicture: .constant(UIImage()), isLoading: .constant(false), previousStep: {}, finishRegistration: {})
 }
