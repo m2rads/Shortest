@@ -11,7 +11,7 @@ import Supabase
 struct EditProfile: View {
     @State var username = ""
     @State var fullName = ""
-    @State var website = ""
+    @State var bio = ""
     @State var isLoading = false
     
     @Binding var appUser: AppUser?
@@ -26,7 +26,7 @@ struct EditProfile: View {
                         .textInputAutocapitalization(.never)
                     TextField("Full name", text: $fullName)
                         .textContentType(.name)
-                    TextField("Website", text: $website)
+                    TextField("Bio", text: $bio)
                         .textContentType(.URL)
                         .textInputAutocapitalization(.never)
                 }
@@ -64,7 +64,7 @@ struct EditProfile: View {
             
             self.username = profile.username ?? ""
             self.fullName = profile.fullName ?? ""
-//            self.website = profile.website ?? ""
+            self.bio = profile.bio ?? ""
             
         } catch {
             debugPrint(error)

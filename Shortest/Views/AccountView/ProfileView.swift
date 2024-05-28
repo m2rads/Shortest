@@ -5,11 +5,21 @@
 //
 
 import SwiftUI
+import PhotosUI
+import Storage
 
 struct ProfileView: View {
     @State private var showInviteView = false
     @Binding var appUser: AppUser?
     @Environment(\.colorScheme) var colorScheme
+    
+    @State var username = ""
+    @State var fullName = ""
+    @State var bio = ""
+    
+    @State var imageSelection: PhotosPickerItem?
+    @State var avatarImage: AvatarImage?
+    @State var isLoading = false
     
     var body: some View {
         NavigationStack {
@@ -17,20 +27,28 @@ struct ProfileView: View {
                 VStack(alignment: .leading) {
                     // Profile picture and info
                     HStack(alignment: .top) {
-                        Image("ppfPlaceHolder")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 80, height: 80)
-                            .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.white, lineWidth: 4))
-                            .padding(.leading)
+                        Group {
+                            if let avatarImage {
+                                avatarImage.image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                            } else {
+                                Image("ppfPlaceHolder")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                            }
+                        }
+                        .frame(width: 80, height: 80)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.white, lineWidth: 4))
+                        .padding(.leading)
                         
                         VStack(alignment: .leading) {
-                            Text("@Mohrad23")
+                            Text("@\(username)")
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                             
-                            Text("Mohammad Rad")
+                            Text(fullName)
                                 .font(.title2)
                                 .bold()
                         }
@@ -42,7 +60,7 @@ struct ProfileView: View {
                     
                     // Bio and website
                     VStack(alignment: .leading) {
-                        Text("just a dude who codes · my notebook 👉 [github.com/m2rads](https://github.com/m2rads)")
+                        Text(bio)
                             .font(.body)
                             .padding(.bottom, 5)
                         
@@ -118,6 +136,87 @@ struct ProfileView: View {
                     }
                 }
             }
+            .onChange(of: imageSelection) { _, newValue in
+                guard let newValue else { return }
+                loadTransferable(from: newValue)
+            }
+        }
+        .task {
+            await getInitialProfile()
+        }
+    }
+    
+    func getInitialProfile() async {
+        do {
+            let currentUser = try await supabase.auth.session.user
+            print("current user \(currentUser.id)")
+            print("appUser?.uid \(String(describing: appUser?.uid))")
+            
+            let profile: Profile = try await supabase
+                .from("profiles")
+                .select()
+                .eq("id", value: currentUser.id)
+                .single()
+                .execute()
+                .value
+            
+            username = profile.username ?? ""
+            fullName = profile.fullName ?? ""
+            bio = profile.bio ?? ""
+            
+            if let avatarURL = profile.avatarURL, !avatarURL.isEmpty {
+                try await downloadImage(path: avatarURL)
+            }
+            
+        } catch {
+            debugPrint(error)
+        }
+    }
+    
+    private func loadTransferable(from imageSelection: PhotosPickerItem) {
+        Task {
+            do {
+                avatarImage = try await imageSelection.loadTransferable(type: AvatarImage.self)
+            } catch {
+                debugPrint(error)
+            }
+        }
+    }
+    
+    private func downloadImage(path: String) async throws {
+        let data = try await supabase.storage.from("avatars").download(path: path)
+        avatarImage = AvatarImage(data: data)
+    }
+    
+    private func uploadImage() async throws -> String? {
+        guard let data = avatarImage?.data else { return nil }
+        
+        let filePath = "\(UUID().uuidString).jpeg"
+        
+        try await supabase.storage
+            .from("avatars")
+            .upload(
+                path: filePath,
+                file: data,
+                options: FileOptions(contentType: "image/jpeg")
+            )
+        
+        return filePath
+    }
+}
+
+struct AvatarImage: Transferable {
+    let data: Data
+    var image: Image {
+        Image(uiImage: UIImage(data: data)!)
+    }
+    
+    static var transferRepresentation: some TransferRepresentation {
+        DataRepresentation(importedContentType: .image) { data in
+            guard UIImage(data: data) != nil else {
+                throw NSError(domain: "Invalid image data", code: -1, userInfo: nil)
+            }
+            return AvatarImage(data: data)
         }
     }
 }
