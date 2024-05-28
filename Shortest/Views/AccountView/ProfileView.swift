@@ -149,8 +149,6 @@ struct ProfileView: View {
     func getInitialProfile() async {
         do {
             let currentUser = try await supabase.auth.session.user
-            print("current user \(currentUser.id)")
-            print("appUser?.uid \(String(describing: appUser?.uid))")
             
             let profile: Profile = try await supabase
                 .from("profiles")
