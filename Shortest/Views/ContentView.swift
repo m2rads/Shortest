@@ -12,12 +12,13 @@ struct ContentView: View {
     @State var appUser: AppUser?
     @StateObject var viewModel = SignInViewModel()
     @State var result: Result<Void, Error>?
-
+    @State private var isRegistered = false
+    @State var newUserEmail: String?
+    
     var body: some View {
         NavigationView {
             ZStack {
                 if appUser != nil {
-    //                ChatView(appUser: $appUser)
                     ProfileView(appUser: $appUser)
                 } else {
                     SignInView(appUser: $appUser)
@@ -29,15 +30,15 @@ struct ContentView: View {
                 }
             }
             .fullScreenCover(isPresented: $showRegisterView) {
-                RegistrationView(showRegisterView: $showRegisterView, appUser: $appUser)
+                RegistrationView(showRegisterView: $showRegisterView, appUser: $appUser, newUserEmail: $newUserEmail, isRegistered: $isRegistered)
             }
             .onOpenURL(perform: { url in
                 Task {
                     do {
                         print("url \(url)")
                         if let (accessToken, refreshToken) = extractTokens(from: url) {
-                            let appUser = try await AuthManager.shared.setInviteSession(accessToken: accessToken, refreshToken: refreshToken)
-                            self.appUser = appUser
+                            let newUserEmail = try await AuthManager.shared.setInviteSession(accessToken: accessToken, refreshToken: refreshToken)
+                            self.newUserEmail = newUserEmail
                             showRegisterView.toggle()
                             print("deeplink result: \(String(describing: appUser))")
                         } else {
