@@ -68,10 +68,10 @@ struct ProfileView: View {
                             HStack {
                                 Text("4")
                                     .bold()
-                                Text("Following")
+                                Text("groups")
                                 Text("1")
                                     .bold()
-                                Text("Followers")
+                                Text("members")
                             }
                             .font(.footnote)
                             .foregroundColor(.gray)
