@@ -10,13 +10,15 @@ import Storage
 
 struct ProfileView: View {
     @State private var showInviteView = false
+    @State private var showCreateGroupView = false
     @Binding var appUser: AppUser?
     @Environment(\.colorScheme) var colorScheme
     
     @State var username = ""
     @State var fullName = ""
     @State var bio = ""
-    
+    @State var groups: [GroupModel] = []
+      
     @State var imageSelection: PhotosPickerItem?
     @State var avatarImage: AvatarImage?
     @State var isLoading = false
@@ -66,12 +68,9 @@ struct ProfileView: View {
                         
                         HStack {
                             HStack {
-                                Text("4")
+                                Text("\(groups.count)")
                                     .bold()
                                 Text("groups")
-                                Text("1")
-                                    .bold()
-                                Text("members")
                             }
                             .font(.footnote)
                             .foregroundColor(.gray)
@@ -93,13 +92,32 @@ struct ProfileView: View {
                     }
                     .padding(.horizontal)
                     
+                    // Groups list
+                    VStack(alignment: .leading) {
+                        Text("Groups")
+                            .font(.headline)
+                            .padding(.horizontal)
+                        
+                        ForEach(groups, id: \.id) { group in
+                            NavigationLink(destination: GroupView(group: group)) {
+                                Text(group.name)
+                                    .font(.body)
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal)
+                            }
+                        }
+                    }
+                    .padding(.top, 20)
+                    
                     // Empty state for messages
-                    VStack {
-                        Text("No thoughts yet")
-                            .font(.body)
-                            .foregroundColor(.gray)
-                            .padding()
-                        Spacer()
+                    if groups.isEmpty {
+                        VStack {
+                            Text("No thoughts yet")
+                                .font(.body)
+                                .foregroundColor(.gray)
+                                .padding()
+                            Spacer()
+                        }
                     }
                 }
                 .padding(.top, 20)
@@ -130,6 +148,11 @@ struct ProfileView: View {
                         }) {
                             Text("Sign Out")
                         }
+                        Button(action: {
+                            showCreateGroupView.toggle()
+                        }) {
+                            Text("Create Group")
+                        }
                     } label: {
                         Image(systemName: "ellipsis")
                             .foregroundColor(.gray)
@@ -143,6 +166,10 @@ struct ProfileView: View {
         }
         .task {
             await getInitialProfile()
+            await fetchUserGroups()
+        }
+        .fullScreenCover(isPresented: $showCreateGroupView) {
+            CreateGroupView(showCreateGroupView: $showCreateGroupView)
         }
     }
     
@@ -166,6 +193,23 @@ struct ProfileView: View {
                 try await downloadImage(path: avatarURL)
             }
             
+        } catch {
+            debugPrint(error)
+        }
+    }
+    
+    func fetchUserGroups() async {
+        do {
+            let currentUser = try await supabase.auth.session.user
+            
+            let userGroups: [GroupModel] = try await supabase
+                .from("groups")
+                .select()
+                .eq("creator_id", value: currentUser.id)
+                .execute()
+                .value
+            
+            groups = userGroups
         } catch {
             debugPrint(error)
         }
@@ -202,6 +246,7 @@ struct ProfileView: View {
         return filePath
     }
 }
+
 
 struct AvatarImage: Transferable {
     let data: Data

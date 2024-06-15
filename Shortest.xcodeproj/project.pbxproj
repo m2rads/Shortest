@@ -39,6 +39,7 @@
 		DF7C944E2BFBDA0B00AC1F9B /* AppleSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7C944D2BFBDA0B00AC1F9B /* AppleSignIn.swift */; };
 		DF8DBCDF2C03EDFB00271F0A /* FullNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8DBCDE2C03EDFB00271F0A /* FullNameView.swift */; };
 		DFBE086D2C1A9ED600DC5BFE /* CreateGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBE086C2C1A9ED600DC5BFE /* CreateGroupView.swift */; };
+		DFBE086F2C1D269600DC5BFE /* GroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBE086E2C1D269600DC5BFE /* GroupView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +72,7 @@
 		DF7C944F2BFBF14C00AC1F9B /* Shortest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Shortest.entitlements; sourceTree = "<group>"; };
 		DF8DBCDE2C03EDFB00271F0A /* FullNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullNameView.swift; sourceTree = "<group>"; };
 		DFBE086C2C1A9ED600DC5BFE /* CreateGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroupView.swift; sourceTree = "<group>"; };
+		DFBE086E2C1D269600DC5BFE /* GroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,6 +227,7 @@
 			isa = PBXGroup;
 			children = (
 				DFBE086C2C1A9ED600DC5BFE /* CreateGroupView.swift */,
+				DFBE086E2C1D269600DC5BFE /* GroupView.swift */,
 			);
 			path = Group;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 				DF50A7642BFD2A1D008D638B /* UsernameView.swift in Sources */,
 				DF7C94432BF980BB00AC1F9B /* DataModel.swift in Sources */,
 				DF606A3F2BFF228700EAF10C /* NetworkService.swift in Sources */,
+				DFBE086F2C1D269600DC5BFE /* GroupView.swift in Sources */,
 				DF7C944E2BFBDA0B00AC1F9B /* AppleSignIn.swift in Sources */,
 				DF50A7552BFC5F4A008D638B /* SignInViewModel.swift in Sources */,
 				DF7C94472BFAD35600AC1F9B /* EditProfile.swift in Sources */,
