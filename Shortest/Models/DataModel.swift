@@ -8,12 +8,14 @@
 import Foundation
 
 struct Profile: Codable {
+    let id: UUID
     let username: String?
     let fullName: String?
     let bio: String?
     let avatarURL: String?
     
     enum CodingKeys: String, CodingKey {
+        case id
         case username
         case fullName = "full_name"
         case bio
@@ -35,10 +37,13 @@ struct GroupMembership: Codable {
     let joined_at: Date
 }
 
-struct Message: Codable {
+struct Message: Identifiable, Codable {
     let id: UUID
     let content: String
     let group_id: UUID
     let user_id: UUID
     let timestamp: Date
+    let userName: String
+    let userHandle: String
+    let groupName: String
 }
