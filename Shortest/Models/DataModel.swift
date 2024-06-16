@@ -8,15 +8,37 @@
 import Foundation
 
 struct Profile: Codable {
-  let username: String?
-  let fullName: String?
-  let bio: String?
-  let avatarURL: String?
+    let username: String?
+    let fullName: String?
+    let bio: String?
+    let avatarURL: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case username
+        case fullName = "full_name"
+        case bio
+        case avatarURL = "avatar_url"
+    }
+}
 
-  enum CodingKeys: String, CodingKey {
-    case username
-    case fullName = "full_name"
-    case bio
-    case avatarURL = "avatar_url"
-  }
+struct GroupModel: Codable {
+    let id: UUID
+    let name: String
+    let description: String?
+    let creator_id: UUID
+}
+
+struct GroupMembership: Codable {
+    let id: UUID
+    let group_id: UUID
+    let user_id: UUID
+    let joined_at: Date
+}
+
+struct Message: Codable {
+    let id: UUID
+    let content: String
+    let group_id: UUID
+    let user_id: UUID
+    let timestamp: Date
 }
