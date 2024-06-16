@@ -37,10 +37,10 @@ struct CreateGroupView: View {
         do {
             let currentUser = try await supabase.auth.session.user
             let group = GroupModel(
-                id: nil, 
+                id: UUID(),
                 name: groupName,
                 description: description,
-                creatorId: currentUser.id
+                creator_id: currentUser.id
             )
             
             try await supabase
@@ -56,14 +56,6 @@ struct CreateGroupView: View {
         }
     }
 }
-
-struct GroupModel: Codable {
-    let id: UUID?
-    let name: String
-    let description: String?
-    let creatorId: UUID
-}
-
 
 #Preview {
     CreateGroupView(showCreateGroupView: .constant(false))
