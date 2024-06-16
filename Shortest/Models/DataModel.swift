@@ -47,3 +47,26 @@ struct Message: Identifiable, Codable {
     let userHandle: String
     let groupName: String
 }
+
+struct SearchResult: Identifiable, Codable {
+    let id: UUID
+    var group: GroupModel?
+    var user: Profile?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case group
+        case user
+    }
+}
+
+struct SearchResponse: Codable {
+    let id: UUID
+    let type: String
+    let username: String?
+    let full_name: String?
+    let bio: String?
+    let avatar_url: String?
+    let name: String?
+    let description: String?
+}
