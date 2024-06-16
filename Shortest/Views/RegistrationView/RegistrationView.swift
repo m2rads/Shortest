@@ -15,9 +15,12 @@ struct RegistrationView: View {
     @State private var fullName = ""
     @State private var bio = ""
     @State private var profilePicture = UIImage()
+    @State var isLoading = false
+
     @Binding var showRegisterView: Bool
     @Binding var appUser: AppUser?
-    @State var isLoading = false
+    @Binding var newUserEmail: String?
+    @Binding var isRegistered: Bool
     
     var body: some View {
         VStack {
@@ -37,8 +40,8 @@ struct RegistrationView: View {
             }
         }
         .onAppear {
-            if let user = appUser {
-                email = user.email ?? ""
+            if let user = newUserEmail {
+                email = user
             }
         }
         .gesture(
@@ -71,7 +74,7 @@ struct RegistrationView: View {
             isLoading = true
             defer { isLoading = false }
             do {
-                let currentUser = try await supabase.auth.session.user
+                let session = try await supabase.auth.session
                 
                 let imageUrl = try await uploadImage(image: profilePicture)
                 
@@ -87,8 +90,17 @@ struct RegistrationView: View {
                     .update(
                         updatedProfile
                     )
-                    .eq("id", value: currentUser.id)
+                    .eq("id", value: session.user.id)
                     .execute()
+                
+                
+                appUser = AppUser(
+                    uid: session.user.id.uuidString,
+                    email: session.user.email,
+                    accessToken: session.accessToken
+                )
+                
+                self.showRegisterView = false
             } catch {
                 debugPrint(error)
             }
@@ -114,5 +126,5 @@ struct RegistrationView: View {
 
 
 #Preview {
-    RegistrationView(showRegisterView: .constant(false), appUser: .constant(.init(uid: "", email: "example@hello.com", accessToken: "")))
+    RegistrationView(showRegisterView: .constant(false), appUser: .constant(.init(uid: "12345", email: "hello@example.com", accessToken: "")), newUserEmail: .constant("example@hello.com"), isRegistered: .constant(false))
 }
