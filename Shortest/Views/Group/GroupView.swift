@@ -14,26 +14,33 @@ struct GroupView: View {
     @State var isOwner = false
     @State private var messageText = ""
     @State private var messages: [Message] = []
-    
+    var userId: UUID
+    var userName: String
+    var userHandle: String
+
     var body: some View {
         VStack {
             ScrollView {
                 VStack(alignment: .leading) {
-                    ForEach(messages, id: \.id) { message in
+                    ForEach(messages) { message in
                         HStack {
-                            Text(message.content)
-                                .padding()
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(8)
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                            VStack(alignment: .leading) {
+                                Text("\(message.userName) @\(message.userHandle)")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                Text(message.content)
+                                    .padding()
+                                    .background(Color.gray.opacity(0.2))
+                                    .cornerRadius(8)
+                            }
+                            .padding(.horizontal)
+                            .padding(.top, 4)
                         }
-                        .padding(.horizontal)
-                        .padding(.top, 4)
                     }
                 }
             }
             
-            if isMember || isOwner {
+            if isOwner || isMember {
                 HStack {
                     TextField("Enter your message...", text: $messageText)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -87,26 +94,22 @@ struct GroupView: View {
     }
     
     private func sendMessage() async {
-        // Logic to send the message
         guard !messageText.isEmpty else { return }
         
-        do {
-            let userId = try await supabase.auth.session.user.id
-            
-            let newMessage = Message(
-                id: UUID(),
-                content: messageText,
-                group_id: group.id,
-                user_id: userId,
-                timestamp: Date()
-            )
-            
-            messages.append(newMessage)
-            messageText = ""
-            saveMessage(newMessage)
-        } catch {
-            
-        }
+        let newMessage = Message(
+            id: UUID(),
+            content: messageText,
+            group_id: group.id,
+            user_id: userId,
+            timestamp: Date(),
+            userName: userName,
+            userHandle: userHandle,
+            groupName: group.name
+        )
+        
+        messages.append(newMessage)
+        messageText = ""
+        saveMessage(newMessage)
     }
     
     private func saveMessage(_ message: Message) {
@@ -122,7 +125,7 @@ struct GroupView: View {
             }
         }
     }
-    
+
     private func loadMessages() async {
         do {
             let fetchedMessages: [Message] = try await supabase
@@ -137,7 +140,7 @@ struct GroupView: View {
             print("Error loading messages: \(error)")
         }
     }
-    
+
     private func joinGroup() async {
         do {
             let userId = try await supabase.auth.session.user.id
@@ -154,7 +157,7 @@ struct GroupView: View {
             print("Error joining group: \(error)")
         }
     }
-    
+
     private func checkMembership() async {
         do {
             let userId = try await supabase.auth.session.user.id
@@ -165,13 +168,13 @@ struct GroupView: View {
                 .eq("user_id", value: userId)
                 .execute()
                 .value
-            
+
             isMember = !memberships.isEmpty
         } catch {
             print("Error checking membership: \(error)")
         }
     }
-    
+
     private func checkOwnership() async {
         do {
             let userId = try await supabase.auth.session.user.id
@@ -182,8 +185,12 @@ struct GroupView: View {
     }
 }
 
-
 #Preview {
-    GroupView(group: .init(id: UUID(), name: "Test Group", description: "Testing the first Group", creator_id: UUID()))
+    GroupView(
+        group: GroupModel(id: UUID(), name: "A New Group", description: "This is a new group to test", creator_id: UUID()),
+        userId: UUID(),
+        userName: "Mohammad",
+        userHandle: "Mohrad23"
+    )
 }
 
