@@ -43,6 +43,7 @@
 		DFBE08742C1EAF8800DC5BFE /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBE08732C1EAF8800DC5BFE /* HomeView.swift */; };
 		DFBE08772C1EB10300DC5BFE /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBE08762C1EB10300DC5BFE /* SearchView.swift */; };
 		DFBE087A2C1EB13D00DC5BFE /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBE08792C1EB13D00DC5BFE /* NotificationView.swift */; };
+		DFBE087C2C1ED0E000DC5BFE /* SearchResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBE087B2C1ED0E000DC5BFE /* SearchResultView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +80,7 @@
 		DFBE08732C1EAF8800DC5BFE /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		DFBE08762C1EB10300DC5BFE /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		DFBE08792C1EB13D00DC5BFE /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		DFBE087B2C1ED0E000DC5BFE /* SearchResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -253,6 +255,7 @@
 			isa = PBXGroup;
 			children = (
 				DFBE08762C1EB10300DC5BFE /* SearchView.swift */,
+				DFBE087B2C1ED0E000DC5BFE /* SearchResultView.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -368,6 +371,7 @@
 				DFBE08772C1EB10300DC5BFE /* SearchView.swift in Sources */,
 				DF7C944E2BFBDA0B00AC1F9B /* AppleSignIn.swift in Sources */,
 				DF50A7552BFC5F4A008D638B /* SignInViewModel.swift in Sources */,
+				DFBE087C2C1ED0E000DC5BFE /* SearchResultView.swift in Sources */,
 				DF7C94472BFAD35600AC1F9B /* EditProfile.swift in Sources */,
 				DFBE087A2C1EB13D00DC5BFE /* NotificationView.swift in Sources */,
 				DF7C94452BFAD33300AC1F9B /* MagicLinkView.swift in Sources */,
