@@ -79,6 +79,7 @@ struct RegistrationView: View {
                 let imageUrl = try await uploadImage(image: profilePicture)
                 
                 let updatedProfile = Profile(
+                    id: session.user.id,
                     username: username,
                     fullName: fullName,
                     bio: bio,

@@ -120,6 +120,7 @@ struct EditProfile: View {
                 let imageUrl = try await uploadImage()
                 
                 let updatedProfile = Profile(
+                    id: currentUser.id, 
                     username: username,
                     fullName: fullName,
                     bio: bio,

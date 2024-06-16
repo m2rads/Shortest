@@ -99,7 +99,12 @@ struct ProfileView: View {
                             .padding(.horizontal)
                         
                         ForEach(groups, id: \.id) { group in
-                            NavigationLink(destination: GroupView(group: group)) {
+                            NavigationLink(destination: GroupView(
+                                group: group,
+                                userId: UUID(uuidString: appUser!.uid)!,
+                                userName: fullName,
+                                userHandle: username
+                            )) {
                                 Text(group.name)
                                     .font(.body)
                                     .padding(.vertical, 8)
@@ -246,7 +251,6 @@ struct ProfileView: View {
         return filePath
     }
 }
-
 
 struct AvatarImage: Transferable {
     let data: Data
