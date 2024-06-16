@@ -19,7 +19,7 @@ struct ContentView: View {
         NavigationView {
             ZStack {
                 if appUser != nil {
-                    ProfileView(appUser: $appUser)
+                    MainView(appUser: $appUser)
                 } else {
                     SignInView(appUser: $appUser)
                 }
