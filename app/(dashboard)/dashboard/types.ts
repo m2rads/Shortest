@@ -20,3 +20,35 @@ export interface TestFile {
   content: string;
   oldContent?: string;
 }
+
+export interface Project {
+  id: number;
+  name: string;
+  owner: string;
+  defaultBranch: string;
+  lastCommitDate: string | null;
+  lastCommitMessage: string;
+}
+
+export interface ConnectedRepository {
+  id: number;
+  userId: number;
+  repoId: number;
+  name: string;
+  owner: string;
+  defaultBranch: string;
+  lastCommitDate: Date | null;
+  lastCommitMessage: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface NewConnectedRepository {
+  userId: number;
+  repoId: number;
+  name: string;
+  owner: string;
+  defaultBranch: string;
+  lastCommitDate: Date | null;
+  lastCommitMessage: string | null;
+}
