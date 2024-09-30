@@ -9,6 +9,9 @@ import {
   pullRequests,
   PullRequest,
   NewPullRequest,
+  connectedRepositories,
+  ConnectedRepository,
+  NewConnectedRepository,
 } from "./schema";
 import { auth } from "@clerk/nextjs/server";
 import { and, sql } from "drizzle-orm";
@@ -73,4 +76,25 @@ export async function getPullRequests(): Promise<PullRequest[]> {
   }
 
   return db.select().from(pullRequests).where(eq(pullRequests.userId, user.id));
+}
+
+export async function saveConnectedRepo(userId: number, repo: NewConnectedRepository): Promise<ConnectedRepository> {
+  const [createdRepo] = await db.insert(connectedRepositories).values({
+    ...repo,
+    userId,
+  }).returning();
+  return createdRepo;
+}
+
+export async function getConnectedRepos(userId: number): Promise<ConnectedRepository[]> {
+  return db.select().from(connectedRepositories).where(eq(connectedRepositories.userId, userId));
+}
+
+export async function isRepoConnected(userId: number, repoId: number): Promise<boolean> {
+  const result = await db
+    .select({ id: connectedRepositories.id })
+    .from(connectedRepositories)
+    .where(and(eq(connectedRepositories.userId, userId), eq(connectedRepositories.repoId, repoId)))
+    .limit(1);
+  return result.length > 0;
 }
