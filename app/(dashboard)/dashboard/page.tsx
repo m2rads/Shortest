@@ -2,70 +2,49 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2, AlertCircle } from "lucide-react";
-import { PullRequestItem } from "./pull-request";
-import { PullRequest } from "./types";
-import { getAssignedPullRequests } from "@/lib/github";
+import { Loader2, AlertCircle, Plus } from "lucide-react";
+import { ProjectCard } from "./project-card";
+import { Project } from "./types";
+import { getConnectedProjects } from "@/lib/github";
+import { useToast } from "@/hooks/use-toast";
+import { RepoSelector } from "./repo-selector";
 
 export default function DashboardPage() {
-  const [pullRequests, setPullRequests] = useState<PullRequest[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showRepoSelector, setShowRepoSelector] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
-    const fetchAndSetPullRequests = async () => {
-      try {
-        const data = await getAssignedPullRequests();
-        if ("error" in data) {
-          setError(data.error as string);
-          setPullRequests([]);
-        } else {
-          setPullRequests(
-            data.map((pr) => ({
-              ...pr,
-              repository: {
-                id: parseInt(pr.repoId, 10),
-                name: pr.repo,
-                full_name: `${pr.owner}/${pr.repo}`,
-                owner: {
-                  login: pr.owner,
-                },
-              },
-            }))
-          );
-          setError(null);
-        }
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching pull requests:", error);
-        setLoading(false);
-        setError(
-          "Failed to fetch pull requests. Please reconnect your GitHub account."
-        );
-        setPullRequests([]);
-      }
-    };
-
-    fetchAndSetPullRequests();
+    fetchProjects();
   }, []);
 
-  const handleReconnectGitHub = async () => {
+  const fetchProjects = async () => {
+    setLoading(true);
     try {
-      const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-      if (!clientId) {
-        throw new Error("GitHub Client ID is not set");
-      }
-      if (!baseUrl) {
-        throw new Error("Base URL is not set");
-      }
-      const redirectUri = `${baseUrl}/api/github/callback`;
-      const encodedRedirectUri = encodeURIComponent(redirectUri);
-      window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodedRedirectUri}&scope=repo,user`;
+      const data = await getConnectedProjects();
+      setProjects(data);
+      setError(null);
     } catch (error) {
-      console.error("Error redirecting to GitHub:", error);
-      setError("Failed to redirect to GitHub. Please try again.");
+      console.error("Error fetching projects:", error);
+      setError("Failed to fetch connected projects. Please try again.");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleAddNewRepo = () => {
+    setShowRepoSelector(true);
+  };
+
+  const handleRepoSelected = (newProject: Project) => {
+    setProjects((prevProjects) => [...prevProjects, newProject]);
+    setShowRepoSelector(false);
+    toast({
+      title: "Success",
+      description: "New repository connected successfully.",
+    });
   };
 
   if (loading) {
@@ -81,32 +60,26 @@ export default function DashboardPage() {
       <div className="flex flex-col items-center justify-center h-full">
         <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
         <p className="text-lg mb-4">{error}</p>
-        <Button onClick={handleReconnectGitHub}>
-          Reconnect GitHub account
-        </Button>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <div className="p-6">
-        {pullRequests.length > 0 ? (
-          <ul className="space-y-8">
-            {pullRequests.map((pr) => (
-              <li key={pr.id}>
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-semibold text-lg">
-                    {pr.repository.full_name}
-                  </h3>
-                </div>
-                <PullRequestItem pullRequest={pr} />
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No pull requests found.</p>
-        )}
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Connected Projects</h1>
+        <Button onClick={handleAddNewRepo} className="bg-green-500 hover:bg-green-600 text-white">
+          <Plus className="mr-2 h-4 w-4" />
+          Add New Repository
+        </Button>
+      </div>
+      {showRepoSelector && (
+        <RepoSelector onRepoSelected={handleRepoSelected} onClose={() => setShowRepoSelector(false)} />
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {projects.map((project) => (
+          <ProjectCard key={project.id} project={project} />
+        ))}
       </div>
     </div>
   );
