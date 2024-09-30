@@ -58,10 +58,31 @@ export const pullRequests = pgTable(
   })
 );
 
+export const connectedRepositories = pgTable(
+  "connected_repositories",
+  {
+    id: serial("id").primaryKey(),
+    userId: integer("user_id").notNull().references(() => users.id),
+    repoId: integer("repo_id").notNull(),
+    name: varchar("name", { length: 255 }).notNull(),
+    owner: varchar("owner", { length: 255 }).notNull(),
+    defaultBranch: varchar("default_branch", { length: 255 }).notNull(),
+    lastCommitDate: timestamp("last_commit_date"),
+    lastCommitMessage: text("last_commit_message"),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => ({
+    uniqueUserRepo: uniqueIndex("unique_user_repo_idx").on(table.userId, table.repoId),
+  })
+);
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type PullRequest = typeof pullRequests.$inferSelect;
 export type NewPullRequest = typeof pullRequests.$inferInsert;
+export type ConnectedRepository = typeof connectedRepositories.$inferSelect;
+export type NewConnectedRepository = typeof connectedRepositories.$inferInsert;
 
 export interface ExtendedPullRequest extends PullRequest {
   repository: {
