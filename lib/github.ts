@@ -6,8 +6,11 @@ import {
   getUserByClerkId,
   updateUserGithubToken,
   createUser,
+  saveConnectedRepo,
+  getConnectedRepos,
+  isRepoConnected,
 } from "./db/queries";
-import { TestFile } from "../app/(dashboard)/dashboard/types";
+import { TestFile, Project, PullRequest, ConnectedRepository, NewConnectedRepository } from "../app/(dashboard)/dashboard/types";
 
 async function getOctokit() {
   const { userId } = auth();
@@ -331,4 +334,207 @@ export async function getPullRequestInfo(
     console.error("Error fetching PR info:", error);
     throw new Error("Failed to fetch PR info");
   }
+}
+
+export async function getConnectedProjects(): Promise<Project[]> {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  const user = await getUserByClerkId(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const connectedRepos = await getConnectedRepos(user.id);
+  return connectedRepos.map(repoToProject);
+}
+
+export async function connectNewRepo() {
+  try {
+    // Replace these with your actual GitHub App details
+    const GITHUB_APP_ID = process.env.APP_ID;
+    const GITHUB_APP_NAME = process.env.GITHUB_APP_NAME;
+
+    if (!GITHUB_APP_ID || !GITHUB_APP_NAME) {
+      throw new Error("GitHub App ID or name is not set in environment variables");
+    }
+
+    // Construct the GitHub App installation URL
+    const installationUrl = `https://github.com/apps/${GITHUB_APP_NAME}/installations/new`;
+
+    // Redirect the user to the GitHub App installation page
+    window.location.href = installationUrl;
+  } catch (error) {
+    console.error("Error connecting new repo:", error);
+    throw new Error("Failed to connect new repository");
+  }
+}
+
+export async function getProjectPullRequests(projectId: number): Promise<PullRequest[]> {
+  const octokit = await getOctokit();
+
+  try {
+    // Use a custom request to get repository information by ID
+    const { data: repo } = await octokit.request('GET /repositories/{repository_id}', {
+      repository_id: projectId
+    });
+
+    const { data: pullRequests } = await octokit.pulls.list({
+      owner: repo.owner.login,
+      repo: repo.name,
+      state: "open",
+      sort: "updated",
+      direction: "desc",
+    });
+
+    return Promise.all(
+      pullRequests.map(async (pr) => {
+        const buildStatus = await fetchBuildStatus(
+          octokit,
+          repo.owner.login,
+          repo.name,
+          pr.head.ref
+        );
+
+        return {
+          id: pr.id,
+          title: pr.title,
+          number: pr.number,
+          buildStatus,
+          isDraft: pr.draft || false,
+          branchName: pr.head.ref,
+          repository: {
+            id: repo.id,
+            name: repo.name,
+            full_name: repo.full_name,
+            owner: {
+              login: repo.owner.login,
+            },
+          },
+        };
+      })
+    );
+  } catch (error) {
+    console.error("Error fetching project pull requests:", error);
+    throw new Error("Failed to fetch project pull requests");
+  }
+}
+
+export async function getRecentRepositories(): Promise<Project[]> {
+  const octokit = await getOctokit();
+
+  try {
+    const { data } = await octokit.repos.listForAuthenticatedUser({
+      sort: "pushed",
+      direction: "desc",
+      per_page: 10,
+    });
+
+    return Promise.all(data.map(async (repo) => {
+      const { data: commits } = await octokit.repos.listCommits({
+        owner: repo.owner.login,
+        repo: repo.name,
+        per_page: 1,
+      });
+
+      return {
+        id: repo.id,
+        name: repo.name,
+        owner: repo.owner.login,
+        defaultBranch: repo.default_branch,
+        lastCommitDate: commits[0]?.commit.committer?.date || repo.pushed_at || null,
+        lastCommitMessage: commits[0]?.commit.message || "",
+      };
+    }));
+  } catch (error) {
+    console.error("Error fetching recent repositories:", error);
+    throw new Error("Failed to fetch recent repositories");
+  }
+}
+
+export async function searchRepositories(searchTerm: string): Promise<Project[]> {
+  const octokit = await getOctokit();
+
+  try {
+    const { data } = await octokit.search.repos({
+      q: `${searchTerm} user:${(await octokit.users.getAuthenticated()).data.login}`,
+      sort: "updated",
+      order: "desc",
+      per_page: 10,
+    });
+
+    return Promise.all(data.items.map(async (repo) => {
+      const { data: commits } = await octokit.repos.listCommits({
+        owner: repo.owner?.login || "",
+        repo: repo.name,
+        per_page: 1,
+      });
+
+      return {
+        id: repo.id,
+        name: repo.name,
+        owner: repo.owner?.login || "",
+        defaultBranch: repo.default_branch,
+        lastCommitDate: commits[0]?.commit.committer?.date || repo.pushed_at || null,
+        lastCommitMessage: commits[0]?.commit.message || "",
+      };
+    }));
+  } catch (error) {
+    console.error("Error searching repositories:", error);
+    throw new Error("Failed to search repositories");
+  }
+}
+
+export async function connectRepository(repoId: number): Promise<void> {
+  const octokit = await getOctokit();
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  const user = await getUserByClerkId(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  try {
+    const { data: repo } = await octokit.request('GET /repositories/{repository_id}', {
+      repository_id: repoId
+    });
+
+    const isAlreadyConnected = await isRepoConnected(user.id, repoId);
+    if (isAlreadyConnected) {
+      console.log(`Repository ${repo.full_name} is already connected`);
+      return;
+    }
+
+    const newRepo: NewConnectedRepository = {
+      userId: user.id,
+      repoId: repo.id,
+      name: repo.name,
+      owner: repo.owner.login,
+      defaultBranch: repo.default_branch,
+      lastCommitDate: repo.pushed_at ? new Date(repo.pushed_at) : null,
+      lastCommitMessage: "",  // You might want to fetch this separately
+    };
+
+    await saveConnectedRepo(user.id, newRepo);
+    console.log(`Connected repository: ${repo.full_name}`);
+  } catch (error) {
+    console.error("Error connecting repository:", error);
+    throw new Error("Failed to connect repository");
+  }
+}
+
+function repoToProject(repo: ConnectedRepository): Project {
+  return {
+    id: repo.repoId,
+    name: repo.name,
+    owner: repo.owner,
+    defaultBranch: repo.defaultBranch,
+    lastCommitDate: repo.lastCommitDate?.toISOString() || null,
+    lastCommitMessage: repo.lastCommitMessage || "",
+  };
 }
