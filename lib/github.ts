@@ -448,7 +448,7 @@ export async function getRecentRepositories(): Promise<Project[]> {
         defaultBranch: repo.default_branch,
         lastCommitDate: commits[0]?.commit.committer?.date || repo.pushed_at || null,
         lastCommitMessage: commits[0]?.commit.message || "",
-        environments: [], // Add this line
+        environments: [], // Changed from {} to []
       };
     }));
   } catch (error) {
@@ -568,9 +568,9 @@ export async function getProjectDetails(projectId: number): Promise<Project> {
       name: repo.name,
       owner: repo.owner.login,
       defaultBranch: repo.default_branch,
-      lastCommitDate: repo.pushed_at,
+      lastCommitDate: repo.pushed_at || null,
       lastCommitMessage: "", // You might want to fetch this separately
-      environments: settings?.environments || []
+      environments: Array.isArray(settings?.environments) ? settings.environments : []
     };
   } catch (error) {
     console.error("Error fetching project details:", error);

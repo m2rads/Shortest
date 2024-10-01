@@ -12,9 +12,11 @@ import {
   connectedRepositories,
   ConnectedRepository,
   NewConnectedRepository,
+  projectSettings,
+  ProjectSettings,
 } from "./schema";
 import { auth } from "@clerk/nextjs/server";
-import { and, sql } from "drizzle-orm";
+import { and } from "drizzle-orm";
 
 export async function updateUserSubscription(
   clerkId: string,
