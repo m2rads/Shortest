@@ -9,6 +9,7 @@ import {
   varchar,
   integer,
   boolean,
+  json,
 } from "drizzle-orm/pg-core";
 
 // Use this object to send drizzle queries to your DB
@@ -77,12 +78,29 @@ export const connectedRepositories = pgTable(
   })
 );
 
+export const projectSettings = pgTable(
+  "project_settings",
+  {
+    id: serial("id").primaryKey(),
+    projectId: integer("project_id").notNull(),
+    userId: integer("user_id").notNull().references(() => users.id),
+    environments: json("environments").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => ({
+    uniqueUserProject: uniqueIndex("unique_user_project_idx").on(table.userId, table.projectId),
+  })
+);
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type PullRequest = typeof pullRequests.$inferSelect;
 export type NewPullRequest = typeof pullRequests.$inferInsert;
 export type ConnectedRepository = typeof connectedRepositories.$inferSelect;
 export type NewConnectedRepository = typeof connectedRepositories.$inferInsert;
+export type ProjectSettings = typeof projectSettings.$inferSelect;
+export type NewProjectSettings = typeof projectSettings.$inferInsert;
 
 export interface ExtendedPullRequest extends PullRequest {
   repository: {

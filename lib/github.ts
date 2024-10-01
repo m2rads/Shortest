@@ -9,6 +9,8 @@ import {
   saveConnectedRepo,
   getConnectedRepos,
   isRepoConnected,
+  getProjectSettings,
+  upsertProjectSettings,
 } from "./db/queries";
 import { TestFile, Project, PullRequest, ConnectedRepository, NewConnectedRepository } from "../app/(dashboard)/dashboard/types";
 
@@ -544,14 +546,23 @@ function repoToProject(repo: ConnectedRepository): Project {
 
 export async function getProjectDetails(projectId: number): Promise<Project> {
   const octokit = await getOctokit();
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  const user = await getUserByClerkId(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
 
   try {
     const { data: repo } = await octokit.request('GET /repositories/{repository_id}', {
       repository_id: projectId
     });
 
-    // Fetch project settings from your database here
-    // For now, we'll return a mock object
+    const settings = await getProjectSettings(user.id, projectId);
+
     return {
       id: repo.id,
       name: repo.name,
@@ -559,7 +570,7 @@ export async function getProjectDetails(projectId: number): Promise<Project> {
       defaultBranch: repo.default_branch,
       lastCommitDate: repo.pushed_at,
       lastCommitMessage: "", // You might want to fetch this separately
-      environments: [] // Fetch this from your database
+      environments: settings?.environments || []
     };
   } catch (error) {
     console.error("Error fetching project details:", error);
@@ -568,7 +579,21 @@ export async function getProjectDetails(projectId: number): Promise<Project> {
 }
 
 export async function updateProjectSettings(projectId: number, projectData: Project): Promise<void> {
-  // Implement the logic to update project settings in your database
-  console.log("Updating project settings:", projectId, projectData);
-  // This is where you would typically make a database call to update the settings
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  const user = await getUserByClerkId(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  try {
+    await upsertProjectSettings(user.id, projectId, projectData.environments);
+    console.log("Project settings updated successfully");
+  } catch (error) {
+    console.error("Error updating project settings:", error);
+    throw new Error("Failed to update project settings");
+  }
 }

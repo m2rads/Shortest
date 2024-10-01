@@ -98,3 +98,33 @@ export async function isRepoConnected(userId: number, repoId: number): Promise<b
     .limit(1);
   return result.length > 0;
 }
+
+export async function getProjectSettings(userId: number, projectId: number): Promise<ProjectSettings | null> {
+  const result = await db
+    .select()
+    .from(projectSettings)
+    .where(and(eq(projectSettings.userId, userId), eq(projectSettings.projectId, projectId)))
+    .limit(1);
+
+  return result[0] || null;
+}
+
+export async function upsertProjectSettings(userId: number, projectId: number, environments: any): Promise<ProjectSettings> {
+  const [settings] = await db
+    .insert(projectSettings)
+    .values({
+      userId,
+      projectId,
+      environments,
+    })
+    .onConflictDoUpdate({
+      target: [projectSettings.userId, projectSettings.projectId],
+      set: {
+        environments,
+        updatedAt: new Date(),
+      },
+    })
+    .returning();
+
+  return settings;
+}
