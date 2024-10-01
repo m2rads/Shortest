@@ -446,6 +446,7 @@ export async function getRecentRepositories(): Promise<Project[]> {
         defaultBranch: repo.default_branch,
         lastCommitDate: commits[0]?.commit.committer?.date || repo.pushed_at || null,
         lastCommitMessage: commits[0]?.commit.message || "",
+        environments: [], // Add this line
       };
     }));
   } catch (error) {
@@ -479,6 +480,7 @@ export async function searchRepositories(searchTerm: string): Promise<Project[]>
         defaultBranch: repo.default_branch,
         lastCommitDate: commits[0]?.commit.committer?.date || repo.pushed_at || null,
         lastCommitMessage: commits[0]?.commit.message || "",
+        environments: [], // Add this line
       };
     }));
   } catch (error) {
@@ -536,5 +538,37 @@ function repoToProject(repo: ConnectedRepository): Project {
     defaultBranch: repo.defaultBranch,
     lastCommitDate: repo.lastCommitDate?.toISOString() || null,
     lastCommitMessage: repo.lastCommitMessage || "",
+    environments: [], // Add this line
   };
+}
+
+export async function getProjectDetails(projectId: number): Promise<Project> {
+  const octokit = await getOctokit();
+
+  try {
+    const { data: repo } = await octokit.request('GET /repositories/{repository_id}', {
+      repository_id: projectId
+    });
+
+    // Fetch project settings from your database here
+    // For now, we'll return a mock object
+    return {
+      id: repo.id,
+      name: repo.name,
+      owner: repo.owner.login,
+      defaultBranch: repo.default_branch,
+      lastCommitDate: repo.pushed_at,
+      lastCommitMessage: "", // You might want to fetch this separately
+      environments: [] // Fetch this from your database
+    };
+  } catch (error) {
+    console.error("Error fetching project details:", error);
+    throw new Error("Failed to fetch project details");
+  }
+}
+
+export async function updateProjectSettings(projectId: number, projectData: Project): Promise<void> {
+  // Implement the logic to update project settings in your database
+  console.log("Updating project settings:", projectId, projectData);
+  // This is where you would typically make a database call to update the settings
 }
