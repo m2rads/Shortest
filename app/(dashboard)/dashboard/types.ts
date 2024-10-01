@@ -28,6 +28,7 @@ export interface Project {
   defaultBranch: string;
   lastCommitDate: string | null;
   lastCommitMessage: string;
+  environments: Environment[];
 }
 
 export interface ConnectedRepository {
@@ -51,4 +52,15 @@ export interface NewConnectedRepository {
   defaultBranch: string;
   lastCommitDate: Date | null;
   lastCommitMessage: string | null;
+}
+
+export interface Environment {
+  name: string;
+  url: string;
+  testAccounts: TestAccount[];
+}
+
+export interface TestAccount {
+  username: string;
+  password: string;
 }
