@@ -329,7 +329,7 @@ export async function getPullRequestInfo(
     }
 
     return {
-      diff: diffResponse.data,
+      diff: diffResponse.data, // This should be a string
       testFiles,
     };
   } catch (error) {

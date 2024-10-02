@@ -19,6 +19,7 @@ import { PullRequest, TestFile } from "./types";
 import { generateTestsResponseSchema } from "@/app/api/generate-tests/schema";
 import { useToast } from "@/hooks/use-toast";
 import { commitChangesToPullRequest, getPullRequestInfo } from "@/lib/github";
+import { generateUITestScenarios } from "@/lib/ui-tests";
 
 const ReactDiffViewer = dynamic(() => import("react-diff-viewer"), {
   ssr: false,
@@ -40,6 +41,8 @@ export function PullRequestItem({ pullRequest }: PullRequestItemProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const [testScenarios, setTestScenarios] = useState<string[]>([]);
+  const [isGeneratingScenarios, setIsGeneratingScenarios] = useState(false);
 
   const handleTests = async (pr: PullRequest, mode: "write" | "update") => {
     setAnalyzing(true);
@@ -175,6 +178,32 @@ export function PullRequestItem({ pullRequest }: PullRequestItemProps) {
     }));
   };
 
+  const handleGenerateUITest = async () => {
+    setIsGeneratingScenarios(true);
+    try {
+      const prInfo = await getPullRequestInfo(
+        pullRequest.repository.owner.login,
+        pullRequest.repository.name,
+        pullRequest.number
+      );
+      
+      // Extract the actual diff string from the prInfo object
+      const diffString = typeof prInfo.diff === 'string' ? prInfo.diff : JSON.stringify(prInfo.diff);
+      
+      const scenarios = await generateUITestScenarios(pullRequest.id, diffString);
+      setTestScenarios(scenarios);
+    } catch (error) {
+      console.error("Error generating UI test scenarios:", error);
+      toast({
+        title: "Error",
+        description: "Failed to generate UI test scenarios. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingScenarios(false);
+    }
+  };
+
   return (
     <div className="bg-white p-4 rounded-lg shadow-md">
       <div className="flex items-center justify-between mb-2">
@@ -209,44 +238,61 @@ export function PullRequestItem({ pullRequest }: PullRequestItemProps) {
             Build: {pullRequest.buildStatus}
           </Link>
         </span>
-        {testFiles.length > 0 ? (
-          <Button
-            size="sm"
-            className="bg-white hover:bg-gray-100 text-black border border-gray-200"
-            onClick={handleCancelChanges}
-            disabled={loading}
-          >
-            Cancel
-          </Button>
-        ) : pullRequest.buildStatus === "success" ? (
-          <Button
-            size="sm"
-            className="bg-green-500 hover:bg-green-600 text-white"
-            onClick={() => handleTests(pullRequest, "write")}
-            disabled={loading}
-          >
-            {loading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <PlusCircle className="mr-2 h-4 w-4" />
-            )}
-            {loading ? "Loading..." : "Write new tests"}
-          </Button>
-        ) : (
-          <Button
-            size="sm"
-            className="bg-yellow-500 hover:bg-yellow-600 text-white"
-            onClick={() => handleTests(pullRequest, "update")}
-            disabled={loading}
-          >
-            {loading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Edit className="mr-2 h-4 w-4" />
-            )}
-            {loading ? "Loading..." : "Update tests to fix"}
-          </Button>
-        )}
+        <div className="flex space-x-2"> {/* Add this wrapper div with space-x-2 for horizontal spacing */}
+          {testFiles.length > 0 ? (
+            <Button
+              size="sm"
+              className="bg-white hover:bg-gray-100 text-black border border-gray-200"
+              onClick={handleCancelChanges}
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+          ) : pullRequest.buildStatus === "success" ? (
+            <Button
+              size="sm"
+              className="bg-green-500 hover:bg-green-600 text-white"
+              onClick={() => handleTests(pullRequest, "write")}
+              disabled={loading}
+            >
+              {loading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <PlusCircle className="mr-2 h-4 w-4" />
+              )}
+              {loading ? "Loading..." : "Write new tests"}
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              className="bg-yellow-500 hover:bg-yellow-600 text-white"
+              onClick={() => handleTests(pullRequest, "update")}
+              disabled={loading}
+            >
+              {loading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Edit className="mr-2 h-4 w-4" />
+              )}
+              {loading ? "Loading..." : "Update tests to fix"}
+            </Button>
+          )}
+          {pullRequest.buildStatus === "success" && (
+            <Button
+              size="sm"
+              className="bg-purple-500 hover:bg-purple-600 text-white"
+              onClick={handleGenerateUITest}
+              disabled={isGeneratingScenarios}
+            >
+              {isGeneratingScenarios ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <PlusCircle className="mr-2 h-4 w-4" />
+              )}
+              {testScenarios.length > 0 ? "Execute Tests" : "Generate UI Test"}
+            </Button>
+          )}
+        </div>
       </div>
       {error && (
         <div className="mt-4 p-2 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -310,6 +356,16 @@ export function PullRequestItem({ pullRequest }: PullRequestItemProps) {
               </Button>
             </div>
           )}
+        </div>
+      )}
+      {testScenarios.length > 0 && (
+        <div className="mt-4">
+          <h4 className="font-semibold mb-2">UI Test Scenarios:</h4>
+          <ul className="list-disc pl-5">
+            {testScenarios.map((scenario, index) => (
+              <li key={index}>{scenario}</li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
