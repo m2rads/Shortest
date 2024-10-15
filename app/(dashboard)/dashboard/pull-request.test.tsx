@@ -178,4 +178,60 @@ describe('PullRequestItem', () => {
       expect(mutate).toHaveBeenCalled();
     });
   });
+
+  it('handles commit message input', async () => {
+    render(<PullRequestItem pullRequest={mockPullRequest} />);
+    const writeTestsButton = screen.getByText('Write new tests');
+    fireEvent.click(writeTestsButton);
+
+    await waitFor(() => {
+      const commitMessageInput = screen.getByPlaceholderText('Update test files');
+      expect(commitMessageInput).toBeInTheDocument();
+      fireEvent.change(commitMessageInput, { target: { value: 'Custom commit message' } });
+      expect(commitMessageInput).toHaveValue('Custom commit message');
+    });
+  });
+
+  it('disables commit button when commit message is empty', async () => {
+    render(<PullRequestItem pullRequest={mockPullRequest} />);
+    const writeTestsButton = screen.getByText('Write new tests');
+    fireEvent.click(writeTestsButton);
+
+    await waitFor(() => {
+      const commitMessageInput = screen.getByPlaceholderText('Update test files');
+      const commitButton = screen.getByText('Commit changes');
+      
+      fireEvent.change(commitMessageInput, { target: { value: '' } });
+      expect(commitButton).toBeDisabled();
+
+      fireEvent.change(commitMessageInput, { target: { value: 'Valid message' } });
+      expect(commitButton).not.toBeDisabled();
+    });
+  });
+
+  it('handles pending build status', () => {
+    const pendingPR = { ...mockPullRequest, buildStatus: 'pending' };
+    vi.mocked(useSWR).mockReturnValue({
+      data: pendingPR,
+      mutate: vi.fn(),
+      error: undefined,
+      isValidating: false,
+      isLoading: false,
+    });
+    render(<PullRequestItem pullRequest={pendingPR} />);
+    expect(screen.getByText('Build: Pending')).toBeInTheDocument();
+  });
+
+  it('handles unknown build status', () => {
+    const unknownPR = { ...mockPullRequest, buildStatus: 'unknown' };
+    vi.mocked(useSWR).mockReturnValue({
+      data: unknownPR,
+      mutate: vi.fn(),
+      error: undefined,
+      isValidating: false,
+      isLoading: false,
+    });
+    render(<PullRequestItem pullRequest={unknownPR} />);
+    expect(screen.getByText('Build: unknown')).toBeInTheDocument();
+  });
 });
