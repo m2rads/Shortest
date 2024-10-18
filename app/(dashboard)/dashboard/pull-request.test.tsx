@@ -6,7 +6,7 @@ import { PullRequest } from "./types";
 import useSWR from "swr";
 import { fetchBuildStatus } from "@/lib/github";
 import { experimental_useObject as useObject } from "ai/react";
-import { act } from "react-dom/test-utils";
+import { act } from "react";
 
 vi.mock("@/lib/github", async () => {
   const actual = await vi.importActual("@/lib/github");
