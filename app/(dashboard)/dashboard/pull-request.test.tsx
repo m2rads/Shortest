@@ -202,11 +202,13 @@ describe("PullRequestItem", () => {
 
     await act(async () => {
       const { onFinish } = vi.mocked(useObject).mock.calls[0][0];
-      await onFinish({
-        object: {
-          tests: [{ name: "generated_test.ts", content: "generated content" }],
-        },
-      });
+      if (onFinish) {
+        await onFinish({
+          object: {
+            tests: [{ name: "generated_test.ts", content: "generated content" }],
+          },
+        });
+      }
     });
 
     await waitFor(() => {
@@ -236,30 +238,22 @@ describe("PullRequestItem", () => {
 
     render(<PullRequestItem pullRequest={mockPullRequest} />);
 
-    // Wait for the component to render completely
     await waitFor(() => {
-      expect(screen.getByText("Test PR")).toBeInTheDocument();
+      expect(screen.getByText("Show Logs")).toBeInTheDocument();
     });
 
-    // Check if the "Show Logs" button is present
-    const showLogsButton = screen.queryByText("Show Logs");
-    if (showLogsButton) {
-      fireEvent.click(showLogsButton);
+    fireEvent.click(screen.getByText("Show Logs"));
 
-      await waitFor(() => {
-        expect(screen.getByTestId("log-view")).toBeInTheDocument();
-        expect(screen.getByText("Hide Logs")).toBeInTheDocument();
-      });
+    await waitFor(() => {
+      expect(screen.getByTestId("log-view")).toBeInTheDocument();
+      expect(screen.getByText("Hide Logs")).toBeInTheDocument();
+    });
 
-      fireEvent.click(screen.getByText("Hide Logs"));
+    fireEvent.click(screen.getByText("Hide Logs"));
 
-      await waitFor(() => {
-        expect(screen.queryByTestId("log-view")).not.toBeInTheDocument();
-        expect(screen.getByText("Show Logs")).toBeInTheDocument();
-      });
-    } else {
-      // If "Show Logs" button is not present, the test should pass
-      expect(true).toBe(true);
-    }
+    await waitFor(() => {
+      expect(screen.queryByTestId("log-view")).not.toBeInTheDocument();
+      expect(screen.getByText("Show Logs")).toBeInTheDocument();
+    });
   });
 });
