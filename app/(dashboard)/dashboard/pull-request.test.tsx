@@ -5,8 +5,6 @@ import { vi, describe, it, expect, beforeEach } from "vitest";
 import { PullRequest } from "./types";
 import useSWR from "swr";
 import { fetchBuildStatus } from "@/lib/github";
-import { experimental_useObject as useObject } from "ai/react";
-import { act } from "react";
 
 vi.mock("@/lib/github", async () => {
   const actual = await vi.importActual("@/lib/github");
@@ -48,14 +46,6 @@ vi.mock("./log-view", () => ({
   LogView: () => <div data-testid="log-view">Mocked Log View</div>,
 }));
 
-vi.mock("./log-view", () => ({
-  LogView: () => <div data-testid="log-view">Mocked Log View</div>,
-}));
-
-vi.mock("ai/react", () => ({
-  experimental_useObject: vi.fn(),
-}));
-
 describe("PullRequestItem", () => {
   const mockPullRequest: PullRequest = {
     id: 1,
@@ -82,11 +72,6 @@ describe("PullRequestItem", () => {
       mutate: vi.fn(),
       error: undefined,
       isValidating: false,
-      isLoading: false,
-    });
-    vi.mocked(useObject).mockReturnValue({
-      object: null,
-      submit: vi.fn(),
       isLoading: false,
     });
   });
@@ -157,8 +142,6 @@ describe("PullRequestItem", () => {
       );
     });
 
-    // Verify that fetchBuildStatus is called with the correct parameters
-
     expect(fetchBuildStatusMock).toHaveBeenCalledWith(
       mockPullRequest.repository.owner.login,
       mockPullRequest.repository.name,
@@ -178,16 +161,6 @@ describe("PullRequestItem", () => {
       "https://github.com/commit/123"
     );
 
-    const mockSubmit = vi.fn();
-    vi.mocked(useObject).mockReturnValue({
-      object: null,
-      submit: mockSubmit,
-      isLoading: false,
-      setInput: vi.fn(),
-      error: null,
-      stop: vi.fn(),
-    });
-
     const mutate = vi.fn();
     vi.mocked(useSWR).mockReturnValue({
       data: mockPullRequest,
@@ -197,6 +170,13 @@ describe("PullRequestItem", () => {
       isLoading: false,
     });
 
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({
+        tests: [{ name: "generated_test.ts", content: "generated content" }]
+      })
+    });
+
     render(<PullRequestItem pullRequest={mockPullRequest} />);
 
     const writeTestsButton = screen.getByText("Write new tests");
@@ -204,15 +184,6 @@ describe("PullRequestItem", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Analyzing PR diff...")).toBeInTheDocument();
-    });
-
-    await act(async () => {
-      const { onFinish } = vi.mocked(useObject).mock.calls[0][0];
-      await onFinish({
-        object: {
-          tests: [{ name: "generated_test.ts", content: "generated content" }],
-        },
-      });
     });
 
     await waitFor(() => {
