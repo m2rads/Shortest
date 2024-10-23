@@ -34,6 +34,7 @@ import {
 import { LogView } from "./log-view";
 import { PullRequest, TestFile, LogGroup } from "./types";
 import { useLogGroups } from "@/hooks/use-log-groups";
+import { createJenkinsPipeline, triggerJenkinsBuild, getJenkinsBuildStatus } from "@/lib/jenkins";
 
 const ReactDiffViewer = dynamic(() => import("react-diff-viewer"), {
   ssr: false,
@@ -197,6 +198,28 @@ export function PullRequestItem({
 
         // Filter and include relevant test logs
         relevantLogs = filterTestLogs(parsedLogs);
+      } else if (mode === "write") {
+        // Create a new Jenkins pipeline
+        const pipelineResult = await createJenkinsPipeline({
+          branchName: pr.branchName,
+          prNumber: pr.number.toString(),
+          repoUrl: `https://github.com/${pr.repository.full_name}.git`,
+        });
+
+        // Trigger the build
+        await triggerJenkinsBuild({
+          jobName: pipelineResult.jobName,
+          token: pipelineResult.triggerToken,
+        });
+
+        toast({
+          title: "Jenkins Pipeline Created",
+          description: `A new Jenkins pipeline has been created and triggered for PR #${pr.number}`,
+        });
+
+        // Update the PR status optimistically
+        setOptimisticRunning(true);
+        mutate({ ...pullRequest, buildStatus: "running" }, false);
       }
 
       setOldTestFiles(testFilesToUpdate);
@@ -209,7 +232,7 @@ export function PullRequestItem({
       });
     } catch (error) {
       console.error("Error handling tests:", error);
-      setError("Failed to handle tests.");
+      setError("Failed to handle tests or create Jenkins pipeline.");
       setAnalyzing(false);
       setLoading(false);
     }
