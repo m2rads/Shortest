@@ -2,19 +2,7 @@ import React, { useState } from 'react';
 import { Circle, Plus, Play, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
-interface Scenario {
-  id: number;
-  values: string[];
-  isPlaceholder: boolean;
-}
-
-interface TestDefinition {
-  id: number;
-  name: string;
-  columns: string[];
-  scenarios: Scenario[];
-}
+import { TestDefinition } from './types';
 
 interface TestEditorProps {
   onRunTests: (testDefinitions: TestDefinition[]) => void;
