@@ -34,3 +34,16 @@ export interface LogGroup {
   name: string;
   logs: string[];
 }
+
+export interface Scenario {
+  id: number;
+  values: string[];
+  isPlaceholder: boolean;
+}
+
+export interface TestDefinition {
+  id: number;
+  name: string;
+  columns: string[];
+  scenarios: Scenario[];
+}
