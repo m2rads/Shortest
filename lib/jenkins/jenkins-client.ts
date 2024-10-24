@@ -23,12 +23,14 @@ export class JenkinsClient {
     }
   
     async createPipelineJob({ branchName, prNumber, repoUrl }: CreatePipelineOptions) {
-      const jobName = `PR-${prNumber}-${branchName}`;
+      // Sanitize the job name
+      const sanitizedBranchName = branchName.replace(/[^a-zA-Z0-9-_]/g, '_');
+      const jobName = `PR-${prNumber}-${sanitizedBranchName}`;
       const configXml = this.generateJobConfig({ branchName, repoUrl });
-  
+
       try {
         // Create new job
-        const createResponse = await fetch(`${this.jenkinsUrl}/createItem?name=${jobName}`, {
+        const createResponse = await fetch(`${this.jenkinsUrl}/createItem?name=${encodeURIComponent(jobName)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/xml',
@@ -36,15 +38,21 @@ export class JenkinsClient {
           },
           body: configXml,
         });
-  
+
         if (!createResponse.ok) {
-          throw new Error(`Failed to create pipeline: ${createResponse.statusText}`);
+          const errorBody = await createResponse.text();
+          console.error('Jenkins API Error:', {
+            status: createResponse.status,
+            statusText: createResponse.statusText,
+            body: errorBody,
+          });
+          throw new Error(`Failed to create pipeline: ${createResponse.statusText}. Body: ${errorBody}`);
         }
-  
+
         // Enable remote triggers and set token
         const triggerToken = this.generateTriggerToken(prNumber, branchName);
         await this.configureTriggerToken(jobName, triggerToken);
-  
+
         return {
           jobName,
           triggerToken,
