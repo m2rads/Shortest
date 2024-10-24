@@ -199,12 +199,19 @@ export function PullRequestItem({
         // Filter and include relevant test logs
         relevantLogs = filterTestLogs(parsedLogs);
       } else if (mode === "write") {
-        // Create a new Jenkins pipeline
+        console.log('Creating Jenkins pipeline with options:', {
+          branchName: pr.branchName,
+          prNumber: pr.number.toString(),
+          repoUrl: `https://github.com/${pr.repository.full_name}.git`,
+        });
+
         const pipelineResult = await createJenkinsPipeline({
           branchName: pr.branchName,
           prNumber: pr.number.toString(),
           repoUrl: `https://github.com/${pr.repository.full_name}.git`,
         });
+
+        console.log('Jenkins pipeline creation result:', pipelineResult);
 
         // Trigger the build
         await triggerJenkinsBuild({
