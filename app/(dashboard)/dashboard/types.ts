@@ -35,15 +35,9 @@ export interface LogGroup {
   logs: string[];
 }
 
-export interface Scenario {
-  id: number;
-  values: string[];
-  isPlaceholder: boolean;
-}
-
 export interface TestDefinition {
   id: number;
   name: string;
   columns: string[];
-  scenarios: Scenario[];
+  values: string[][];
 }
