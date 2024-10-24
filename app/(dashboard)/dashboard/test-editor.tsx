@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Circle, Plus, Play, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,28 +12,18 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
   const [testDefinitions, setTestDefinitions] = useState<TestDefinition[]>([{
     id: 1,
     name: 'Test Definition',
-    columns: ['scenario', 'id', 'password', 'column name', 'column name', 'column name', 'column name'],
-    scenarios: [{
-      id: 1,
-      values: ['this is s', '12', '1234', 'value', 'value', 'value', 'value'],
-      isPlaceholder: false
-    }, {
-      id: 2,
-      values: ['scenario', 'id value', 'password', 'value', 'value', 'value', 'value'],
-      isPlaceholder: true
-    }]
+    columns: ['scenario'],
+    values: [['']]
   }]);
+
+  const columnWidths = useRef<{ [key: string]: number }>({});
 
   const addTestDefinition = () => {
     setTestDefinitions(prev => [...prev, {
       id: Date.now(),
       name: 'Test Definition',
       columns: ['scenario'],
-      scenarios: [{
-        id: Date.now(),
-        values: [''],
-        isPlaceholder: true
-      }]
+      values: [['']]
     }]);
   };
 
@@ -43,10 +33,7 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
         return {
           ...def,
           columns: [...def.columns, ''],
-          scenarios: def.scenarios.map(scenario => ({
-            ...scenario,
-            values: [...scenario.values, '']
-          }))
+          values: def.values.map(row => [...row, ''])
         };
       }
       return def;
@@ -61,26 +48,19 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
         return {
           ...def,
           columns: def.columns.filter((_, idx) => idx !== columnIndex),
-          scenarios: def.scenarios.map(scenario => ({
-            ...scenario,
-            values: scenario.values.filter((_, idx) => idx !== columnIndex)
-          }))
+          values: def.values.map(row => row.filter((_, idx) => idx !== columnIndex))
         };
       }
       return def;
     }));
   };
 
-  const addScenario = (testDefId: number) => {
+  const addRow = (testDefId: number) => {
     setTestDefinitions(prev => prev.map(def => {
       if (def.id === testDefId) {
         return {
           ...def,
-          scenarios: def.scenarios.map(s => ({...s, isPlaceholder: false})).concat({
-            id: Date.now(),
-            values: Array(def.columns.length).fill(''),
-            isPlaceholder: true
-          })
+          values: [...def.values, Array(def.columns.length).fill('')]
         };
       }
       return def;
@@ -98,20 +78,13 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
     }));
   };
 
-  const updateScenarioValue = (testDefId: number, scenarioId: number, columnIndex: number, value: string) => {
+  const updateValue = (testDefId: number, rowIndex: number, columnIndex: number, value: string) => {
     setTestDefinitions(prev => prev.map(def => {
       if (def.id === testDefId) {
-        return {
-          ...def,
-          scenarios: def.scenarios.map(scenario => {
-            if (scenario.id === scenarioId) {
-              const newValues = [...scenario.values];
-              newValues[columnIndex] = value;
-              return { ...scenario, values: newValues };
-            }
-            return scenario;
-          })
-        };
+        const newValues = [...def.values];
+        newValues[rowIndex] = [...newValues[rowIndex]];
+        newValues[rowIndex][columnIndex] = value;
+        return { ...def, values: newValues };
       }
       return def;
     }));
@@ -123,36 +96,95 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
     ));
   };
 
+  const getPlaceholderText = (columnName: string, rowIndex: number) => {
+    if (columnName.toLowerCase() === 'scenario') return `this is scenario ${rowIndex + 1}`;
+    if (columnName.toLowerCase() === 'id') return '12';
+    if (columnName.toLowerCase() === 'password') return '1234';
+    return 'value';
+  };
+
+  const MIN_WIDTH = 120;
+  const MAX_WIDTH = 240;
+
+  const updateColumnWidth = (testDefId: number, columnIndex: number, width: number) => {
+    columnWidths.current[`${testDefId}-${columnIndex}`] = Math.min(Math.max(width, MIN_WIDTH), MAX_WIDTH);
+  };
+
+  const getColumnWidth = (testDefId: number, columnIndex: number) => {
+    return columnWidths.current[`${testDefId}-${columnIndex}`] || MIN_WIDTH;
+  };
+
+  const recalculateWidth = (element: HTMLInputElement) => {
+    const tempSpan = document.createElement('span');
+    tempSpan.style.visibility = 'hidden';
+    tempSpan.style.position = 'absolute';
+    tempSpan.style.whiteSpace = 'pre';
+    tempSpan.style.font = window.getComputedStyle(element).font;
+    tempSpan.textContent = element.value || element.placeholder;
+    document.body.appendChild(tempSpan);
+    const width = tempSpan.getBoundingClientRect().width;
+    document.body.removeChild(tempSpan);
+    return Math.ceil(width);
+  };
+
+  const handleInputChange = (
+    testDefId: number,
+    rowIndex: number,
+    columnIndex: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    updateValue(testDefId, rowIndex, columnIndex, e.target.value);
+    const newWidth = recalculateWidth(e.target);
+    updateColumnWidth(testDefId, columnIndex, Math.max(newWidth, getColumnWidth(testDefId, columnIndex)));
+  };
+
+  const handleColumnNameChange = (
+    testDefId: number,
+    columnIndex: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    updateColumnName(testDefId, columnIndex, e.target.value);
+    const newWidth = recalculateWidth(e.target);
+    updateColumnWidth(testDefId, columnIndex, Math.max(newWidth, getColumnWidth(testDefId, columnIndex)));
+  };
+
   return (
     <div className="font-mono text-sm space-y-6 p-4">
       {testDefinitions.map((testDef) => (
         <div key={testDef.id} className="space-y-2">
           <div className="flex items-center space-x-2">
             <Circle className="h-4 w-4 shrink-0" fill="none" />
-            <Input
-              value={testDef.name}
-              onChange={(e) => updateTestName(testDef.id, e.target.value)}
-              className="border-none p-0 h-6 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 w-auto font-semibold"
-            />
+            <div className="relative inline-block">
+              <Input
+                value={testDef.name}
+                onChange={(e) => updateTestName(testDef.id, e.target.value)}
+                className="border-none p-0 h-6 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 font-semibold absolute top-0 left-0 w-full"
+                style={{ width: `${testDef.name.length}ch` }}
+              />
+              <span className="invisible whitespace-pre">{testDef.name}</span>
+            </div>
           </div>
 
           <div className="pl-6 overflow-x-auto">
             <div className="inline-block min-w-full">
-              {/* Column Headers with bottom border */}
-              <div className="grid border-b border-gray-200" style={{ 
-                gridTemplateColumns: `repeat(${testDef.columns.length}, 120px)`,
-                gap: '2rem'
-              }}>
+              {/* Column Headers */}
+              <div className="flex border-b border-gray-200">
                 {testDef.columns.map((col, idx) => (
-                  <div key={idx} className="relative group">
+                  <div key={idx} className="relative group flex-shrink-0 px-4">
                     <div className="relative">
                       <Input
                         value={col}
-                        onChange={(e) => updateColumnName(testDef.id, idx, e.target.value)}
-                        className="border-none px-0 py-1 h-8 bg-transparent focus-visible:ring-1 focus-visible:ring-offset-0 focus-visible:ring-blue-500"
+                        onChange={(e) => handleColumnNameChange(testDef.id, idx, e)}
+                        className="border-none px-0 py-1 h-8 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-blue-500 overflow-x-auto"
                         placeholder="column name"
+                        style={{ 
+                          width: `${getColumnWidth(testDef.id, idx)}px`,
+                          minWidth: `${MIN_WIDTH}px`,
+                          maxWidth: `${MAX_WIDTH}px`,
+                          paddingRight: '10px'
+                        }}
                       />
-                      <div className="absolute top-1/2 -translate-y-1/2 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute top-1/2 -translate-y-1/2 right-0 transform translate-x-full opacity-0 group-hover:opacity-100 transition-opacity">
                         <Button
                           variant="ghost"
                           size="sm"
@@ -179,39 +211,39 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
                 ))}
               </div>
 
-              {/* Scenarios */}
+              {/* Values */}
               <div className="space-y-1">
-                {testDef.scenarios.map((scenario) => (
-                  <div 
-                    key={scenario.id} 
-                    className={`grid ${scenario.isPlaceholder ? 'text-gray-400' : ''}`}
-                    style={{ 
-                      gridTemplateColumns: `repeat(${testDef.columns.length}, 120px)`,
-                      gap: '2rem'
-                    }}
-                  >
-                    {scenario.values.map((value, idx) => (
-                      <div key={idx} className="relative group">
-                        <Input
-                          value={value}
-                          onChange={(e) => updateScenarioValue(testDef.id, scenario.id, idx, e.target.value)}
-                          className="border-none px-0 py-1 h-8 bg-transparent focus-visible:ring-1 focus-visible:ring-offset-0 focus-visible:ring-blue-500"
-                          placeholder={`${testDef.columns[idx]} value`}
-                        />
-                        {idx === 0 && !scenario.isPlaceholder && (
-                          <div className="absolute top-1/2 -translate-y-1/2 -left-8">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => addScenario(testDef.id)}
-                              className="h-6 w-6 p-0"
-                            >
-                              <Plus className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        )}
+                {testDef.values.map((row, rowIndex) => (
+                  <div key={rowIndex} className="flex relative">
+                    {row.map((value, columnIndex) => (
+                      <div key={columnIndex} className="relative group flex-shrink-0 px-4">
+                        <div className="relative inline-block">
+                          <Input
+                            value={value}
+                            onChange={(e) => handleInputChange(testDef.id, rowIndex, columnIndex, e)}
+                            className="border-none px-0 py-1 h-8 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-blue-500 overflow-x-auto"
+                            placeholder={getPlaceholderText(testDef.columns[columnIndex], rowIndex)}
+                            style={{ 
+                              width: `${getColumnWidth(testDef.id, columnIndex)}px`,
+                              minWidth: `${MIN_WIDTH}px`,
+                              maxWidth: `${MAX_WIDTH}px`
+                            }}
+                          />
+                        </div>
                       </div>
                     ))}
+                    {rowIndex === testDef.values.length - 1 && (
+                      <div className="absolute -left-6 top-1/2 -translate-y-1/2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => addRow(testDef.id)}
+                          className="h-6 w-6 p-0"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

@@ -560,7 +560,6 @@ export function PullRequestItem({
       )}
       {showTestEditor && (
         <div className="mt-4">
-          <h4 className="font-semibold mb-2">UI Test Editor</h4>
           <TestEditor onRunTests={handleRunTests} />
         </div>
       )}
