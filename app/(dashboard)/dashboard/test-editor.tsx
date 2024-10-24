@@ -124,7 +124,7 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
     document.body.appendChild(tempSpan);
     const width = tempSpan.getBoundingClientRect().width;
     document.body.removeChild(tempSpan);
-    return Math.ceil(width);
+    return Math.ceil(width) + 20; // Add some padding
   };
 
   const handleInputChange = (
@@ -134,8 +134,7 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     updateValue(testDefId, rowIndex, columnIndex, e.target.value);
-    const newWidth = recalculateWidth(e.target);
-    updateColumnWidth(testDefId, columnIndex, Math.max(newWidth, getColumnWidth(testDefId, columnIndex)));
+    updateColumnWidthForAllInputs(testDefId, columnIndex);
   };
 
   const handleColumnNameChange = (
@@ -144,8 +143,19 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     updateColumnName(testDefId, columnIndex, e.target.value);
-    const newWidth = recalculateWidth(e.target);
-    updateColumnWidth(testDefId, columnIndex, Math.max(newWidth, getColumnWidth(testDefId, columnIndex)));
+    updateColumnWidthForAllInputs(testDefId, columnIndex);
+  };
+
+  const updateColumnWidthForAllInputs = (testDefId: number, columnIndex: number) => {
+    const inputs = document.querySelectorAll(`[data-testdef-id="${testDefId}"][data-column-index="${columnIndex}"]`);
+    let maxWidth = MIN_WIDTH;
+    inputs.forEach((input) => {
+      if (input instanceof HTMLInputElement) {
+        const width = recalculateWidth(input);
+        maxWidth = Math.max(maxWidth, width);
+      }
+    });
+    updateColumnWidth(testDefId, columnIndex, maxWidth);
   };
 
   return (
@@ -177,6 +187,8 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
                         onChange={(e) => handleColumnNameChange(testDef.id, idx, e)}
                         className="border-none px-0 py-1 h-8 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-blue-500 overflow-x-auto"
                         placeholder="column name"
+                        data-testdef-id={testDef.id}
+                        data-column-index={idx}
                         style={{ 
                           width: `${getColumnWidth(testDef.id, idx)}px`,
                           minWidth: `${MIN_WIDTH}px`,
@@ -223,6 +235,8 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
                             onChange={(e) => handleInputChange(testDef.id, rowIndex, columnIndex, e)}
                             className="border-none px-0 py-1 h-8 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-blue-500 overflow-x-auto"
                             placeholder={getPlaceholderText(testDef.columns[columnIndex], rowIndex)}
+                            data-testdef-id={testDef.id}
+                            data-column-index={columnIndex}
                             style={{ 
                               width: `${getColumnWidth(testDef.id, columnIndex)}px`,
                               minWidth: `${MIN_WIDTH}px`,
