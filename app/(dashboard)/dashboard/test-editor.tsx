@@ -124,7 +124,7 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
     document.body.appendChild(tempSpan);
     const width = tempSpan.getBoundingClientRect().width;
     document.body.removeChild(tempSpan);
-    return Math.ceil(width) + 20; // Add some padding
+    return Math.ceil(width) + 20;
   };
 
   const handleInputChange = (
