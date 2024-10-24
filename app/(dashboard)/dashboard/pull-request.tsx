@@ -18,6 +18,8 @@ import {
   AlertCircle,
   ChevronDown,
   ChevronUp,
+  ToggleLeft,
+  ToggleRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -56,6 +58,7 @@ export function PullRequestItem({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [commitMessage, setCommitMessage] = useState("Update test files");
+  const [isUnitTestMode, setIsUnitTestMode] = useState(true);
   const { toast } = useToast();
 
   const { data: pullRequest, mutate } = useSWR(
@@ -129,12 +132,6 @@ export function PullRequestItem({
       return { ...group, logs: relevantLogs };
     }).filter(group => group.logs.length > 0);
 
-    // TODO: Uncomment this when we implement token counting
-    // const tokenCount = filteredLogs.reduce((count, group) => 
-    //   count + group.name.length + group.logs.join(' ').length, 0);
-    
-    // console.log(`Filtered log token count: ${tokenCount}`);
-
     return filteredLogs;
   }, []);
 
@@ -195,7 +192,6 @@ export function PullRequestItem({
           failingTests.some((failingFile) => failingFile.name === file.name)
         );
 
-        // Filter and include relevant test logs
         relevantLogs = filterTestLogs(parsedLogs);
       }
 
@@ -206,6 +202,7 @@ export function PullRequestItem({
         pr_diff: diff,
         test_files: testFilesToUpdate,
         test_logs: relevantLogs,
+        test_type: isUnitTestMode ? "unit" : "ui",
       });
     } catch (error) {
       console.error("Error handling tests:", error);
@@ -322,6 +319,10 @@ export function PullRequestItem({
     }));
   };
 
+  const handleToggleTestMode = () => {
+    setIsUnitTestMode(!isUnitTestMode);
+  };
+
   const { filteredTestFiles, newSelectedFiles, newExpandedFiles } =
     handleTestFilesUpdate(oldTestFiles, object?.tests);
 
@@ -340,12 +341,26 @@ export function PullRequestItem({
           )}
           <span className="font-medium">{pullRequest.title}</span>
         </span>
-        <Link
-          href={`https://github.com/${pullRequest.repository.full_name}/pull/${pullRequest.number}`}
-          className="text-sm text-gray-600 underline"
-        >
-          #{pullRequest.number}
-        </Link>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={handleToggleTestMode}
+            className="flex items-center space-x-1 text-gray-500 hover:text-gray-700 focus:outline-none"
+            aria-label={`Switch to ${isUnitTestMode ? "UI" : "Unit"} Test Mode`}
+          >
+            <span className="text-sm">{isUnitTestMode ? "Unit Tests" : "UI Tests"}</span>
+            {isUnitTestMode ? (
+              <ToggleLeft className="h-5 w-5" />
+            ) : (
+              <ToggleRight className="h-5 w-5" />
+            )}
+          </button>
+          <Link
+            href={`https://github.com/${pullRequest.repository.full_name}/pull/${pullRequest.number}`}
+            className="text-sm text-gray-600 underline"
+          >
+            #{pullRequest.number}
+          </Link>
+        </div>
       </div>
       <div className="flex items-center justify-between">
         <span className="flex items-center">
@@ -403,7 +418,8 @@ export function PullRequestItem({
           >
             Cancel
           </Button>
-        ) : pullRequest.buildStatus === "success" || isPending ? (
+        ) : pullRequest.buildStatus === 
+          "success" || isPending ? (
           <Button
             size="sm"
             className="bg-green-500 hover:bg-green-600 text-white"
@@ -419,7 +435,7 @@ export function PullRequestItem({
               ? "Loading..."
               : isRunning
               ? "Running..."
-              : "Write new tests"}
+              : `Write new ${isUnitTestMode ? "unit" : "UI"} tests`}
           </Button>
         ) : (
           <Button
@@ -439,7 +455,7 @@ export function PullRequestItem({
               ? "Running..."
               : parsedLogs.length === 0
               ? "Preparing logs..."
-              : "Update tests to fix"}
+              : `Update ${isUnitTestMode ? "unit" : "UI"} tests to fix`}
           </Button>
         )}
       </div>
