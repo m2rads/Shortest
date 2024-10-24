@@ -36,6 +36,8 @@ import {
 import { LogView } from "./log-view";
 import { PullRequest, TestFile, LogGroup } from "./types";
 import { useLogGroups } from "@/hooks/use-log-groups";
+import { TestDefinition } from "./types";
+import TestEditor from './test-editor';
 
 const ReactDiffViewer = dynamic(() => import("react-diff-viewer"), {
   ssr: false,
@@ -60,6 +62,7 @@ export function PullRequestItem({
   const [commitMessage, setCommitMessage] = useState("Update test files");
   const [isUnitTestMode, setIsUnitTestMode] = useState(true);
   const { toast } = useToast();
+  const [showTestEditor, setShowTestEditor] = useState(false);
 
   const { data: pullRequest, mutate } = useSWR(
     `pullRequest-${initialPullRequest.id}`,
@@ -323,6 +326,16 @@ export function PullRequestItem({
     setIsUnitTestMode(!isUnitTestMode);
   };
 
+  const handleWriteNewTests = () => {
+    setShowTestEditor(true);
+  };
+
+  const handleRunTests = (testDefinitions: TestDefinition[]) => {
+    console.log('Running tests:', testDefinitions);
+    // Here you would typically send these test definitions to your backend
+    // or process them as needed
+  };
+
   const { filteredTestFiles, newSelectedFiles, newExpandedFiles } =
     handleTestFilesUpdate(oldTestFiles, object?.tests);
 
@@ -423,7 +436,7 @@ export function PullRequestItem({
           <Button
             size="sm"
             className="bg-green-500 hover:bg-green-600 text-white"
-            onClick={() => handleTests(pullRequest, "write")}
+            onClick={() => isUnitTestMode ? handleTests(pullRequest, "write") : handleWriteNewTests()}
             disabled={loading || isRunning}
           >
             {loading || isRunning ? (
@@ -543,6 +556,12 @@ export function PullRequestItem({
             error={logsError}
             isLoading={!logs && !logsError}
           />
+        </div>
+      )}
+      {showTestEditor && (
+        <div className="mt-4">
+          <h4 className="font-semibold mb-2">UI Test Editor</h4>
+          <TestEditor onRunTests={handleRunTests} />
         </div>
       )}
     </div>
