@@ -330,10 +330,21 @@ export function PullRequestItem({
     setShowTestEditor(true);
   };
 
-  const handleRunTests = (testDefinitions: TestDefinition[]) => {
-    console.log('Running tests:', testDefinitions);
-    // Here you would typically send these test definitions to your backend
-    // or process them as needed
+  const handleRunUITests = (testDefinitions: TestDefinition[]) => {
+    testDefinitions.forEach(testDef => {
+      testDef.values.forEach(row => {
+        const formattedRow = testDef.columns.map((col, index) => {
+          if (col.toLowerCase() === 'scenario') {
+            return `${testDef.name} ${row[index]}`;
+          } else {
+            return `${col}: ${row[index]}`;
+          }
+        }).join(', ');
+        console.log(formattedRow);
+      });
+    });
+    // You can add any additional logic here if needed
+    // For example, you might want to update some state or trigger other actions
   };
 
   const { filteredTestFiles, newSelectedFiles, newExpandedFiles } =
@@ -560,7 +571,7 @@ export function PullRequestItem({
       )}
       {showTestEditor && (
         <div className="mt-4">
-          <TestEditor onRunTests={handleRunTests} />
+          <TestEditor onRunUITests={handleRunUITests} />
         </div>
       )}
     </div>

@@ -5,10 +5,10 @@ import { Input } from '@/components/ui/input';
 import { TestDefinition } from './types';
 
 interface TestEditorProps {
-  onRunTests: (testDefinitions: TestDefinition[]) => void;
+onRunUITests: (testDefinitions: TestDefinition[]) => void;
 }
 
-const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
+const TestEditor: React.FC<TestEditorProps> = ({ onRunUITests }) => {
   const [testDefinitions, setTestDefinitions] = useState<TestDefinition[]>([{
     id: 1,
     name: 'Test Definition',
@@ -158,6 +158,10 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
     updateColumnWidth(testDefId, columnIndex, maxWidth);
   };
 
+  const handleRunTests = () => {
+    onRunUITests(testDefinitions);
+  };
+
   return (
     <div className="font-mono text-sm space-y-6 p-4">
       {testDefinitions.map((testDef) => (
@@ -279,7 +283,7 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunTests }) => {
         <Button
           size="sm"
           className="bg-blue-900 hover:bg-blue-800 text-white h-8"
-          onClick={() => onRunTests(testDefinitions)}
+          onClick={handleRunTests}
         >
           <Play className="h-4 w-4 mr-1" />
           Run Tests
