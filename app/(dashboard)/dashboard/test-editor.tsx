@@ -4,11 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { TestDefinition } from './types';
 
-interface TestEditorProps {
-onRunUITests: (testDefinitions: TestDefinition[]) => void;
-}
-
-const TestEditor: React.FC<TestEditorProps> = ({ onRunUITests }) => {
+const TestEditor: React.FC = () => {
   const [testDefinitions, setTestDefinitions] = useState<TestDefinition[]>([{
     id: 1,
     name: 'Test Definition',
@@ -158,8 +154,50 @@ const TestEditor: React.FC<TestEditorProps> = ({ onRunUITests }) => {
     updateColumnWidth(testDefId, columnIndex, maxWidth);
   };
 
-  const handleRunTests = () => {
-    onRunUITests(testDefinitions);
+  const handleRunTests = async () => {
+    try {
+      for (const testDef of testDefinitions) {
+        for (const row of testDef.values) {
+          const scenario = testDef.columns.reduce((acc, col, index) => {
+            acc[col] = row[index];
+            return acc;
+          }, {} as Record<string, string>);
+
+          const formattedTest = {
+            name: testDef.name,
+            scenario: scenario
+          };
+
+          console.log('Sending test scenario:', formattedTest);
+
+          const response = await fetch('/api/execute-ui-tests', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ test: formattedTest }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const result = await response.json();
+          console.log('API Response for scenario:', result);
+
+          // Here you can process the result, update UI, etc.
+          // For example:
+          // await processTestResult(result);
+        }
+      }
+
+      console.log('All test scenarios completed');
+      // Here you can update the UI to show all tests are complete
+
+    } catch (error) {
+      console.error('Error running UI tests:', error);
+      // Handle the error appropriately (e.g., show an error message to the user)
+    }
   };
 
   return (
