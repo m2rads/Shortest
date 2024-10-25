@@ -330,23 +330,6 @@ export function PullRequestItem({
     setShowTestEditor(true);
   };
 
-  const handleRunUITests = (testDefinitions: TestDefinition[]) => {
-    testDefinitions.forEach(testDef => {
-      testDef.values.forEach(row => {
-        const formattedRow = testDef.columns.map((col, index) => {
-          if (col.toLowerCase() === 'scenario') {
-            return `${testDef.name} ${row[index]}`;
-          } else {
-            return `${col}: ${row[index]}`;
-          }
-        }).join(', ');
-        console.log(formattedRow);
-      });
-    });
-    // You can add any additional logic here if needed
-    // For example, you might want to update some state or trigger other actions
-  };
-
   const { filteredTestFiles, newSelectedFiles, newExpandedFiles } =
     handleTestFilesUpdate(oldTestFiles, object?.tests);
 
@@ -571,7 +554,7 @@ export function PullRequestItem({
       )}
       {showTestEditor && (
         <div className="mt-4">
-          <TestEditor onRunUITests={handleRunUITests} />
+          <TestEditor />
         </div>
       )}
     </div>
