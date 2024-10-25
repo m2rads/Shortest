@@ -3,6 +3,7 @@ import { Circle, Plus, Play, Trash2, Check, X, Loader2, ChevronDown, ChevronRigh
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { TestDefinition, TestStatus, TestDefinitionStatus } from './types';
+import VNCViewer from './vnc-viewer';
 
 const TestEditor: React.FC = () => {
     const [testDefinitions, setTestDefinitions] = useState<TestDefinition[]>([{
@@ -169,7 +170,6 @@ const TestEditor: React.FC = () => {
     setIsExecuting(true);
     setIsTestComplete(false);
     
-    // Initialize execution status
     const initialStatus: TestDefinitionStatus[] = testDefinitions.map(def => ({
       id: def.id,
       name: def.name,
@@ -179,7 +179,8 @@ const TestEditor: React.FC = () => {
           acc[col] = row[index];
           return acc;
         }, {} as Record<string, string>),
-        status: 'pending'
+        status: 'pending',
+        isVncExpanded: false
       })),
       isExpanded: true
     }));
@@ -188,7 +189,6 @@ const TestEditor: React.FC = () => {
 
     try {
       for (const [defIndex, testDef] of testDefinitions.entries()) {
-        // Set test definition to running
         setExecutionStatus(prev => prev.map((def, idx) => 
           idx === defIndex ? { ...def, status: 'running' } : def
         ));
@@ -196,7 +196,6 @@ const TestEditor: React.FC = () => {
         let hasFailedScenario = false;
 
         for (const [rowIndex, row] of testDef.values.entries()) {
-          // Set scenario to running
           setExecutionStatus(prev => prev.map((def, idx) => 
             idx === defIndex ? {
               ...def,
@@ -230,8 +229,8 @@ const TestEditor: React.FC = () => {
             }
 
             const result = await response.json();
+            console.log('Test execution result:', result);
             
-            // Update scenario status to pass
             setExecutionStatus(prev => prev.map((def, idx) => 
               idx === defIndex ? {
                 ...def,
@@ -242,7 +241,6 @@ const TestEditor: React.FC = () => {
             ));
           } catch (error) {
             hasFailedScenario = true;
-            // Update scenario status to fail
             setExecutionStatus(prev => prev.map((def, idx) => 
               idx === defIndex ? {
                 ...def,
@@ -258,7 +256,6 @@ const TestEditor: React.FC = () => {
           }
         }
 
-        // Update test definition status based on scenarios
         setExecutionStatus(prev => prev.map((def, idx) => 
           idx === defIndex ? {
             ...def,
@@ -306,24 +303,54 @@ const TestEditor: React.FC = () => {
               </div>
               {testDef.isExpanded && (
                 <div className="pl-10 space-y-1">
-                  {testDef.scenarios.map((scenario, index) => (
-                    <div key={index} className="flex space-x-2">
-                        <div className="flex-shrink-0 mt-1">
-                            {getStatusIcon(scenario.status)}
+                {testDef.scenarios.map((scenario, index) => (
+                  <div key={index} className="space-y-2">
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setExecutionStatus(prev => prev.map(def =>
+                            def.id === testDef.id ? {
+                              ...def,
+                              scenarios: def.scenarios.map((s, i) =>
+                                i === index ? { ...s, isVncExpanded: !s.isVncExpanded } : s
+                              )
+                            } : def
+                          ));
+                        }}
+                      >
+                        {scenario.isVncExpanded ? 
+                          <ChevronDown className="h-4 w-4" /> : 
+                          <ChevronRight className="h-4 w-4" />
+                        }
+                      </Button>
+                      <div className="flex-shrink-0 mt-1">
+                        {getStatusIcon(scenario.status)}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <span>
+                            {Object.entries(scenario.scenario)
+                              .map(([key, value]) => `${key}: ${value}`)
+                              .join(', ')}
+                          </span>
                         </div>
-                        <div className="flex-1">
-                            <span>
-                                {Object.entries(scenario.scenario)
-                                    .map(([key, value]) => `${key}: ${value}`)
-                                    .join(', ')}
-                            </span>
-                            {scenario.error && (
-                            <span className="text-red-500 text-xs">{scenario.error}</span>
-                            )}
-                        </div>
+                        {scenario.error && (
+                          <span className="text-red-500 text-xs">{scenario.error}</span>
+                        )}
+                      </div>
                     </div>
-                  ))}
-                </div>
+                    {scenario.isVncExpanded && (
+                      <div className="ml-6 mt-2 border border-gray-200 rounded-md overflow-hidden h-[400px]">
+                        <VNCViewer url="http://localhost:6080/vnc.html?autoconnect=1&view_only=1&resize=scale" />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
               )}
             </div>
           ))}
@@ -438,7 +465,7 @@ const TestEditor: React.FC = () => {
         </>
       )}
 
-<div className="flex justify-between pt-2">
+      <div className="flex justify-between pt-2">
         {isExecuting ? (
           isTestComplete ? (
             // Test execution complete controls
