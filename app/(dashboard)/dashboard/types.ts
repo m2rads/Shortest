@@ -48,6 +48,7 @@ export interface TestScenarioStatus {
   scenario: Record<string, string>;
   status: TestStatus;
   error?: string;
+  isVncExpanded?: boolean;
 }
 
 export interface TestDefinitionStatus {
