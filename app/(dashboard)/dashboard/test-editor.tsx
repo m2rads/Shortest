@@ -2,23 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Circle, Plus, Play, Trash2, Check, X, Loader2, ChevronDown, ChevronRight, Pencil, RotateCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { TestDefinition } from './types';
-
-type TestStatus = 'pending' | 'running' | 'pass' | 'fail';
-
-interface TestScenarioStatus {
-    scenario: Record<string, string>;
-    status: TestStatus;
-    error?: string;
-}
-  
-interface TestDefinitionStatus {
-    id: number;
-    name: string;
-    status: TestStatus;
-    scenarios: TestScenarioStatus[];
-    isExpanded: boolean;
-}
+import { TestDefinition, TestStatus, TestScenarioStatus, TestDefinitionStatus } from './types';
 
 const TestEditor: React.FC = () => {
     const [testDefinitions, setTestDefinitions] = useState<TestDefinition[]>([{
@@ -345,7 +329,7 @@ const TestEditor: React.FC = () => {
           ))}
         </div>
       ) : (
-        // Editor View (keep existing editor JSX unchanged)
+        // Editor View
         <>
           {testDefinitions.map((testDef) => (
             <div key={testDef.id} className="space-y-2">
@@ -409,7 +393,6 @@ const TestEditor: React.FC = () => {
                       </div>
                     ))}
                   </div>
-
                   {/* Values */}
                   <div className="space-y-1">
                     {testDef.values.map((row, rowIndex) => (
@@ -483,13 +466,11 @@ const TestEditor: React.FC = () => {
               </Button>
             </div>
           ) : (
-            // Test is currently running
             <div className="w-full flex justify-end">
-              <span className="text-sm text-gray-500">Tests are running...</span>
+              <span className="text-sm text-gray-500">Executing Tests...</span>
             </div>
           )
         ) : (
-          // Normal editor controls
           <>
             <Button
               size="sm"

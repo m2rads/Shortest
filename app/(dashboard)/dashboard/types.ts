@@ -41,3 +41,19 @@ export interface TestDefinition {
   columns: string[];
   values: string[][];
 }
+
+export type TestStatus = 'pending' | 'running' | 'pass' | 'fail';
+
+export interface TestScenarioStatus {
+  scenario: Record<string, string>;
+  status: TestStatus;
+  error?: string;
+}
+
+export interface TestDefinitionStatus {
+  id: number;
+  name: string;
+  status: TestStatus;
+  scenarios: TestScenarioStatus[];
+  isExpanded: boolean;
+}
