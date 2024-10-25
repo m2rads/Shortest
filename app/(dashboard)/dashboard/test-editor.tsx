@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Circle, Plus, Play, Trash2, Check, X, Loader2, ChevronDown, ChevronRight, Pencil, RotateCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { TestDefinition, TestStatus, TestScenarioStatus, TestDefinitionStatus } from './types';
+import { TestDefinition, TestStatus, TestDefinitionStatus } from './types';
 
 const TestEditor: React.FC = () => {
     const [testDefinitions, setTestDefinitions] = useState<TestDefinition[]>([{
