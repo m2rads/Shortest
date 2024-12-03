@@ -41,7 +41,7 @@ export function Navbar() {
               >
                 <GithubIcon className="h-[1.1rem] w-[1.1rem]" />
               </Link>
-              <Link
+              {/* <Link
                 href="https://x.com/shl"
                 className={buttonVariants({
                   variant: "ghost",
@@ -49,7 +49,7 @@ export function Navbar() {
                 })}
               >
                 <TwitterIcon className="h-[1.1rem] w-[1.1rem]" />
-              </Link>
+              </Link> */}
               {/* <ModeToggle /> */}
             </div>
           </div>
