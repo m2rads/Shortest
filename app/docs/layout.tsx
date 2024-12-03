@@ -1,4 +1,5 @@
 import { Leftbar } from "@/components/docs/leftbar";
+import { Navbar } from "@/components/docs/navbar";
 
 export default function DocsLayout({
   children,
@@ -6,10 +7,13 @@ export default function DocsLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="sm:container mx-auto w-[90vw]">
-      <div className="flex items-start gap-8">
-        <Leftbar key="leftbar" />
-        <div className="flex-[5.25]">{children}</div>
+    <div>
+      <Navbar />
+      <div className="sm:container mx-auto w-[90vw]">
+        <div className="flex items-start gap-8">
+          <Leftbar key="leftbar" />
+          <div className="flex-[5.25]">{children}</div>
+        </div>
       </div>
     </div>
   );
