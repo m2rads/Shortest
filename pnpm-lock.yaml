@@ -234,6 +234,10 @@ importers:
       picocolors:
         specifier: ^1.0.0
         version: 1.1.1
+    optionalDependencies:
+      fsevents:
+        specifier: ^2.3.3
+        version: 2.3.3
     devDependencies:
       '@types/jest':
         specifier: ^29.5.12
