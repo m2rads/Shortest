@@ -11,21 +11,35 @@ import {
   defaultConfig,
   TestHookFunction
 } from './types';
+import { resolveConfig, ResolvedConfig } from './types/config';
 
-// Keep this simple declaration
-declare const global: {
-  __shortest__: any;
-  expect: any;
-} & typeof globalThis;
+// Define a more specific type for our registry
+interface ShortestRegistry {
+  expect: typeof jestExpect;
+  registry: {
+    tests: Map<string, TestFunction[]>;
+    currentFileTests: TestFunction[];
+    beforeAllFns: TestHookFunction[];
+    afterAllFns: TestHookFunction[];
+    beforeEachFns: TestHookFunction[];
+    afterEachFns: TestHookFunction[];
+  };
+}
+
+// Only declare what we absolutely need
+declare global {
+  var __shortest__: ShortestRegistry;
+}
 
 let globalConfig: ShortestConfig | null = null;
 const compiler = new TestCompiler();
 
+// Initialize without touching global.expect
 if (!global.__shortest__) {
   global.__shortest__ = {
     expect: jestExpect,
     registry: {
-      tests: new Map<string, TestFunction[]>(),
+      tests: new Map(),
       currentFileTests: [],
       beforeAllFns: [],
       afterAllFns: [],
@@ -33,9 +47,6 @@ if (!global.__shortest__) {
       afterEachFns: []
     }
   };
-
-  // Use type assertion here
-  (global as any).expect = global.__shortest__.expect;
 }
 
 export async function initialize() {
@@ -74,11 +85,11 @@ export async function initialize() {
   return globalConfig;
 }
 
-export function getConfig(): ShortestConfig {
+export function getConfig(): ResolvedConfig {
   if (!globalConfig) {
     throw new Error('Config not initialized. Call initialize() first');
   }
-  return globalConfig;
+  return resolveConfig(globalConfig);
 }
 
 // New Test API Implementation
