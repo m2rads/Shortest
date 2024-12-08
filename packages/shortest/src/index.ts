@@ -11,22 +11,35 @@ import {
   defaultConfig,
   TestHookFunction
 } from './types';
+import { resolveConfig, ResolvedConfig } from './types/config';
 
-// Initialize config
-let config: ShortestConfig = defaultConfig;
+// Define a more specific type for our registry
+interface ShortestRegistry {
+  expect: typeof jestExpect;
+  registry: {
+    tests: Map<string, TestFunction[]>;
+    currentFileTests: TestFunction[];
+    beforeAllFns: TestHookFunction[];
+    afterAllFns: TestHookFunction[];
+    beforeEachFns: TestHookFunction[];
+    afterEachFns: TestHookFunction[];
+  };
+}
+
+// Only declare what we absolutely need
+declare global {
+  var __shortest__: ShortestRegistry;
+}
+
+let globalConfig: ShortestConfig | null = null;
 const compiler = new TestCompiler();
 
-// Initialize shortest namespace and globals
-declare const global: {
-  __shortest__: any;
-  expect: any;
-} & typeof globalThis;
-
+// Initialize without touching global.expect
 if (!global.__shortest__) {
   global.__shortest__ = {
     expect: jestExpect,
     registry: {
-      tests: new Map<string, TestFunction[]>(),
+      tests: new Map(),
       currentFileTests: [],
       beforeAllFns: [],
       afterAllFns: [],
@@ -34,15 +47,11 @@ if (!global.__shortest__) {
       afterEachFns: []
     }
   };
-
-  // Attach to global scope
-  global.expect = global.__shortest__.expect;
-
-  dotenv.config({ path: join(process.cwd(), '.env') });
-  dotenv.config({ path: join(process.cwd(), '.env.local') });
 }
 
 export async function initialize() {
+  if (globalConfig) return globalConfig;
+
   dotenv.config({ path: join(process.cwd(), '.env') });
   dotenv.config({ path: join(process.cwd(), '.env.local') });
   
@@ -56,19 +65,31 @@ export async function initialize() {
     try {
       const module = await compiler.loadModule(file, process.cwd());
       if (module.default) {
-        config = { ...defaultConfig, ...module.default };
-        return;
+        globalConfig = {
+          ...defaultConfig,
+          ...module.default,
+          // Override with env vars if present
+          anthropicKey: process.env.ANTHROPIC_API_KEY || module.default.anthropicKey || defaultConfig.anthropicKey,
+        };
+        return globalConfig;
       }
     } catch (error) {
       continue;
     }
   }
 
-  config = defaultConfig;
+  globalConfig = {
+    ...defaultConfig,
+    anthropicKey: process.env.ANTHROPIC_API_KEY || defaultConfig.anthropicKey,
+  };
+  return globalConfig;
 }
 
-export function getConfig(): ShortestConfig {
-  return config;
+export function getConfig(): ResolvedConfig {
+  if (!globalConfig) {
+    throw new Error('Config not initialized. Call initialize() first');
+  }
+  return resolveConfig(globalConfig);
 }
 
 // New Test API Implementation
