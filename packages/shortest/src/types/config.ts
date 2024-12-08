@@ -12,5 +12,5 @@ export const defaultConfig: ShortestConfig = {
   headless: false,
   baseUrl: 'http://localhost:3000',
   testDir: '__tests__',
-  anthropicKey: process.env.ANTHROPIC_API_KEY
+  anthropicKey: process.env.ANTHROPIC_API_KEY || ''
 }; 
