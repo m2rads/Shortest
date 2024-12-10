@@ -76,5 +76,8 @@
   "bugs": {
     "url": "https://github.com/anti-work/shortest/issues"
   },
-  "homepage": "https://github.com/anti-work/shortest#readme"
+  "homepage": "https://github.com/anti-work/shortest#readme",
+  "optionalDependencies": {
+    "fsevents": "^2.3.3"
+  }
 }
