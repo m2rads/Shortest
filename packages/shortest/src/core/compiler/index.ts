@@ -24,7 +24,9 @@ export class TestCompiler {
       'url',
       'crypto',
       'buffer',
-      'querystring'
+      'querystring',
+      'fsevents',
+      '*.node'
     ]
   };
 
