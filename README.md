@@ -6,23 +6,22 @@ AI-powered natural language end-to-end testing framework.
 ## Features
 - Natural language E2E testing framework
 - AI-powered test execution using Anthropic Claude API
-- Built on Playwright
-- GitHub integration with 2FA support
+- Built on top of Playwright
 
 ## Installation
 ```bash
-npm install -g @antiwork/shortest
+npm install @antiwork/shortest
 # or
-pnpm add -g @antiwork/shortest
+pnpm add @antiwork/shortest
 # or
-yarn add -g @antiwork/shortest
+yarn add @antiwork/shortest
 ```
 
-### If you installed shortest without `-g` flag, you can run tests as follows:
+### Run Shortest:
 ```bash
-npx shortest    # for npm
-pnpm shortest   # for pnpm
-yarn shortest   # for yarn
+npx shortest    # or
+pnpm shortest   
+yarn shortest   
 ```
 
 ## Quick Start
@@ -115,9 +114,9 @@ test.afterAll(async ({ page }) => {
 
 ## Running Tests
 ```bash
-shortest                    # Run all tests
-shortest login.test.ts     # Run specific test
-shortest --headless        # Run in headless mode using cli
+pnpm shortest                    # Run all tests
+pnpm shortest login.test.ts     # Run specific test
+pnpm shortest --headless        # Run in headless mode using cli
 ```
 
 And you're done!
@@ -133,7 +132,7 @@ Shortest currently supports login using Github 2FA. For GitHub authentication te
 6. Add the OTP secret to your `.env.local` file or use the Shortest CLI to add it
 7. Enter the 2FA code displayed in your terminal into Github's Authenticator setup page to complete the process
 ```bash
-shortest --github-code --secret=<OTP_SECRET>
+pnpm shortest --github-code --secret=<OTP_SECRET>
 ```
 
 ## Environment Setup
